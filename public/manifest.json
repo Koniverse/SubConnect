@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "SubWallet Connect",
+  "name": "SubWallet Connect Examples",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,14 +8,19 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "icon-32.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "32x32"
     },
     {
-      "src": "logo512.png",
+      "src": "icon-64.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "64x64"
+    },
+    {
+      "src": "icon-128.png",
+      "type": "image/png",
+      "sizes": "128x128"
     }
   ],
   "start_url": ".",
