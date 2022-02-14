@@ -3,7 +3,7 @@ import logo from './PolkadotjsLogo.svg';
 
 export class PolkadotjsWallet extends BaseDotsamaWallet {
   extensionName = 'polkadot-js';
-  title = 'Polkadot.js';
+  title = 'Polkadot{.js}';
   noExtensionMessage =
     'You can use any Polkadot compatible wallet but we recommend using Talisman';
   installUrl =

@@ -8,8 +8,8 @@ import { WalletAccount } from './lib/types';
 import { Injected, Unsubcall } from '@polkadot/extension-inject/types';
 
 const WALLETS: Record<string, string> = {
-  'polkadot-js': 'Polkadot Wallet',
-  'subwallet-js': 'Subwallet'
+  'polkadot-js': 'Polkadot{.js}',
+  'subwallet-js': 'SubWallet'
 }
 
 function App () {
