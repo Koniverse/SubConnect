@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './App.scss';
 import { Dropdown, Menu } from 'antd';
 import { useLocalStorage } from './hooks/useLocalStorage/useLocalStorage';
 import { MenuInfo } from 'rc-menu/lib/interface';
 import { getWalletBySource } from './lib/wallets';
 import { WalletAccount } from './lib/types';
-import { Unsubcall } from '@polkadot/extension-inject/types';
+import { Injected, Unsubcall } from '@polkadot/extension-inject/types';
 
 const WALLETS: Record<string, string> = {
   'polkadot-js': 'Polkadot Wallet',
@@ -16,27 +16,50 @@ function App () {
   const [walletKey, setWalletKey] = useLocalStorage('wallet-key');
   const [accounts, setAccounts] = useState<WalletAccount[]>([]);
 
-  const selectWallet = (info: MenuInfo, ignoreNotFound = false) => {
-    const extensionKey = info.key
+  const selectWallet = async (extensionKey: string, ignoreNotFound = false) => {
     const wallet = getWalletBySource(extensionKey);
     if (wallet?.installed) {
-      wallet?.enable();
+      await wallet.enable();
       setWalletKey(extensionKey);
 
       wallet.subscribeAccounts((infos) => {
-          infos && setAccounts(infos)
+        infos && setAccounts(infos)
       }).then((unsub) => {
-        console.log(unsub);
         unsub && unsub();
       }).catch(console.error)
 
     } else if (!ignoreNotFound) {
-      alert(`Extension ${WALLETS[extensionKey]} is not installed`)
+      const install = window.confirm(`Extension ${WALLETS[extensionKey]} is not installed. Do you want install now?`)
+      if (install && wallet?.installUrl) {
+        window.open(wallet.installUrl);
+      }
     }
   }
 
+  useEffect(
+    () => {
+      const wallet = getWalletBySource(walletKey);
+      if (wallet) {
+        const fetchInfo = async () => {
+          await wallet.enable();
+
+          wallet.subscribeAccounts((infos) => {
+            infos && setAccounts(infos)
+          }).then((unsub) => {
+            unsub && unsub();
+          }).catch(console.error)
+        }
+
+        setTimeout(fetchInfo, 100);
+      }
+    },
+    [walletKey],
+  );
+
   const menu = (
-    <Menu onClick={selectWallet}>
+    <Menu onClick={(info: MenuInfo) => {
+      selectWallet(info.key)
+    }}>
       {Object.entries(WALLETS).map(([key, name]) => {
         return (<Menu.Item key={key}>{name}</Menu.Item>)
       })}
