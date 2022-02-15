@@ -1,5 +1,5 @@
 # SubConnect
-An example of dapp for polkadotjs-extension and subwallet extension
+A single Web3 provider solution for all Wallets in Dotsama Ecosystem and blockchains built on Substrate
 
 ## Available Scripts
 
