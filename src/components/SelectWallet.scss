@@ -1,0 +1,52 @@
+.select-wallet-wrapper {
+}
+
+.select-wallet-content {
+  overflow: auto;
+}
+
+.wallet-item {
+  position: relative;
+  padding: 8px 8px;
+  overflow: hidden;
+  border: 1px solid #e6e6e6;
+  border-bottom: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  transition-duration: 0.3s;
+
+  .wallet-logo {
+    width: 24px;
+    height: 24px;
+    margin: 8px;
+  }
+
+  .wallet-title {
+    font-weight: bold;
+    flex: 1 1 300px;
+    padding: 8px;
+
+  }
+
+  .wallet-install {
+    padding: 8px;
+  }
+
+
+  &:first-child {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
+
+  &:last-child {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-bottom: 1px solid #e6e6e6;
+  }
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}

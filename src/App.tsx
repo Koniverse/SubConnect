@@ -1,38 +1,54 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.scss';
-import { Dropdown, Menu } from 'antd';
 import { useLocalStorage } from './hooks/useLocalStorage/useLocalStorage';
-import { MenuInfo } from 'rc-menu/lib/interface';
 import { getWalletBySource } from './lib/wallets';
-import { WalletAccount } from './lib/types';
-import { Injected, Unsubcall } from '@polkadot/extension-inject/types';
-
-const WALLETS: Record<string, string> = {
-  'polkadot-js': 'Polkadot{.js}',
-  'subwallet-js': 'SubWallet'
-}
+import { Wallet, WalletAccount } from './lib/types';
+import Welcome from './components/Welcome';
+import {
+  BrowserRouter,
+  Route,
+  Link, Routes, useNavigate
+} from 'react-router-dom';
+import AccountList from './components/AccountList';
+import Layout from './components/Layout';
+import { OpenSelectWallet, WalletContext } from './contexts';
+import SelectWalletModal from './components/SelectWalletModal';
 
 function App () {
   const [walletKey, setWalletKey] = useLocalStorage('wallet-key');
+  const [currentWallet, setCurrentWallet] = useState(getWalletBySource(walletKey));
+  const [isSelectWallet, setIsSelectWallet] = useState(false);
   const [accounts, setAccounts] = useState<WalletAccount[]>([]);
 
-  const selectWallet = async (extensionKey: string, ignoreNotFound = false) => {
-    const wallet = getWalletBySource(extensionKey);
+  const selectWallet = async (wallet: Wallet) => {
+    setCurrentWallet(currentWallet);
     if (wallet?.installed) {
       await wallet.enable();
-      setWalletKey(extensionKey);
+      setWalletKey(wallet.extensionName);
 
       wallet.subscribeAccounts((infos) => {
         infos && setAccounts(infos)
       }).then((unsub) => {
         unsub && unsub();
       }).catch(console.error)
+    }
+  }
 
-    } else if (!ignoreNotFound) {
-      const install = window.confirm(`Extension ${WALLETS[extensionKey]} is not installed. Do you want install now?`)
-      if (install && wallet?.installUrl) {
-        window.open(wallet.installUrl);
-      }
+  const walletContext = {
+    wallet: getWalletBySource(walletKey),
+    accounts: accounts,
+    setWallet: (wallet: Wallet | undefined) => {
+      wallet && selectWallet(wallet)
+    }
+  }
+
+  const selectWalletContext = {
+    isOpen: isSelectWallet,
+    open: () => {
+      setIsSelectWallet(true)
+    },
+    close: () => {
+      setIsSelectWallet(false)
     }
   }
 
@@ -56,30 +72,20 @@ function App () {
     [walletKey],
   );
 
-  const menu = (
-    <Menu onClick={(info: MenuInfo) => {
-      selectWallet(info.key)
-    }}>
-      {Object.entries(WALLETS).map(([key, name]) => {
-        return (<Menu.Item key={key}>{name}</Menu.Item>)
-      })}
-    </Menu>
-  );
-
   return (
-    <div className="App">
-      <div className="app-container">
-        <h3>Subwallet DAPP example</h3>
-        <h4>Current React App</h4>
-        <Dropdown.Button overlay={menu}>{WALLETS[walletKey] || 'Select Wallet'}</Dropdown.Button>
-        {accounts.map((acc) => (
-          <ul>
-            <li>Account: {acc.name}</li>
-            <li>Address: {acc.address}</li>
-          </ul>
-        ))}
-      </div>
-    </div>
+    <WalletContext.Provider value={walletContext}>
+      <OpenSelectWallet.Provider value={selectWalletContext}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout/>}>
+              <Route index element={<Welcome/>}/>
+              <Route path="/welcome" element={<Welcome/>}/>
+              <Route path="/account-list" element={<AccountList/>}/>
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </OpenSelectWallet.Provider>
+    </WalletContext.Provider>
   );
 }
 

@@ -1,0 +1,30 @@
+.wallet-header-wrapper {
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.wallet-header-content {
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+
+  .wallet-logo {
+    margin: 8px;
+    height: 36px;
+  }
+
+  .wallet-title {
+    padding: 8px;
+    padding-left: 0;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  .spacer {
+    flex: 1 1 100px;
+  }
+
+  .select-wallet {
+    margin: 8px;
+  }
+}
