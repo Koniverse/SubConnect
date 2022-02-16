@@ -4,11 +4,7 @@ import { useLocalStorage } from './hooks/useLocalStorage/useLocalStorage';
 import { getWalletBySource } from './lib/wallets';
 import { Wallet, WalletAccount } from './lib/types';
 import Welcome from './components/Welcome';
-import {
-  BrowserRouter,
-  Route,
-  Link, Routes, useNavigate
-} from 'react-router-dom';
+import { Route, Routes, HashRouter } from 'react-router-dom';
 import AccountList from './components/AccountList';
 import Layout from './components/Layout';
 import { OpenSelectWallet, WalletContext } from './contexts';
@@ -75,7 +71,7 @@ function App () {
   return (
     <WalletContext.Provider value={walletContext}>
       <OpenSelectWallet.Provider value={selectWalletContext}>
-        <BrowserRouter>
+        <HashRouter>
           <Routes>
             <Route path="/" element={<Layout/>}>
               <Route index element={<Welcome/>}/>
@@ -83,7 +79,7 @@ function App () {
               <Route path="/account-list" element={<AccountList/>}/>
             </Route>
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
       </OpenSelectWallet.Provider>
     </WalletContext.Provider>
   );
