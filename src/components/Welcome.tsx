@@ -14,7 +14,7 @@ function Welcome ({}: Props): React.ReactElement<Props> {
 
   useEffect(() => {
     if (walletContext.wallet) {
-      navigate('/account-list')
+      navigate('/wallet-info')
     }
   }, [walletContext.wallet])
 

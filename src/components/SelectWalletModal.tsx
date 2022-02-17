@@ -24,7 +24,7 @@ function SelectWalletModal ({}: Props): React.ReactElement<Props> {
     <SelectWallet onSelectWallet={(walletKey) => {
       walletContext.setWallet(getWalletBySource(walletKey))
       openSelectWalletContext.close()
-      navigate('/account-list')
+      navigate('/wallet-info')
     }}/>
   </Modal>;
 }

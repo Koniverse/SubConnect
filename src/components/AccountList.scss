@@ -1,11 +1,14 @@
 .account-list {
   position: relative;
-  padding: 16px 8px;
 }
 
 .account-item {
-  padding: 8px;
+  padding: 16px;
   border: 1px solid #e6e6e6;
   border-radius: 6px;
   margin-bottom: 16px;
+
+  .info {
+    margin-bottom: 8px;
+  }
 }

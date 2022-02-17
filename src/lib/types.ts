@@ -57,6 +57,8 @@ interface Connector {
 
   // The subscribe to accounts function
   subscribeAccounts: (callback: SubscriptionFn) => Promise<Unsubcall| null>;
+
+  getAccounts: () => Promise<WalletAccount[] | null>
 }
 
 interface WalletErrors {

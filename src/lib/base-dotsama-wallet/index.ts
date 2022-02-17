@@ -1,4 +1,3 @@
-
 import type { Signer as InjectedSigner } from '@polkadot/api/types';
 import { SubscriptionFn, Wallet } from '../types';
 import { AuthError } from '../errors/AuthError';
@@ -20,16 +19,16 @@ export class BaseDotsamaWallet implements Wallet {
   _signer: InjectedSigner | undefined;
 
   // API docs: https://polkadot.js.org/docs/extension/
-  get extension() {
+  get extension () {
     return this._extension;
   }
 
   // API docs: https://polkadot.js.org/docs/extension/
-  get signer() {
+  get signer () {
     return this._signer;
   }
 
-  get installed() {
+  get installed () {
     const injectedWindow = window as Window & InjectedWindow;
     const injectedExtension =
       injectedWindow?.injectedWeb3?.[this.extensionName];
@@ -37,7 +36,7 @@ export class BaseDotsamaWallet implements Wallet {
     return !!injectedExtension;
   }
 
-  get rawExtension() {
+  get rawExtension () {
     const injectedWindow = window as Window & InjectedWindow;
     const injectedExtension =
       injectedWindow?.injectedWeb3?.[this.extensionName];
@@ -104,4 +103,26 @@ export class BaseDotsamaWallet implements Wallet {
 
     return unsubscribe;
   };
+
+  getAccounts = async () => {
+    if (!this._extension) {
+      await this?.enable();
+    }
+
+    if (!this._extension) {
+      return null;
+    }
+
+    const accounts = await this._extension.accounts.get();
+
+    return accounts.map((account) => {
+      return {
+        ...account,
+        source: this._extension?.name as string,
+        // Added extra fields here for convenience
+        wallet: this,
+        signer: this._extension?.signer,
+      };
+    });
+  }
 }

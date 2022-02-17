@@ -9,6 +9,7 @@ import AccountList from './components/AccountList';
 import Layout from './components/Layout';
 import { OpenSelectWallet, WalletContext } from './contexts';
 import SelectWalletModal from './components/SelectWalletModal';
+import WalletInfo from './pages/WalletInfo';
 
 function App () {
   const [walletKey, setWalletKey] = useLocalStorage('wallet-key');
@@ -22,11 +23,8 @@ function App () {
       await wallet.enable();
       setWalletKey(wallet.extensionName);
 
-      wallet.subscribeAccounts((infos) => {
-        infos && setAccounts(infos)
-      }).then((unsub) => {
-        unsub && unsub();
-      }).catch(console.error)
+      const infos = await wallet.getAccounts();
+      infos && setAccounts(infos)
     }
   }
 
@@ -53,13 +51,8 @@ function App () {
       const wallet = getWalletBySource(walletKey);
       if (wallet) {
         const fetchInfo = async () => {
-          await wallet.enable();
-
-          wallet.subscribeAccounts((infos) => {
-            infos && setAccounts(infos)
-          }).then((unsub) => {
-            unsub && unsub();
-          }).catch(console.error)
+          const infos = await wallet.getAccounts();
+          infos && setAccounts(infos)
         }
 
         setTimeout(fetchInfo, 100);
@@ -76,7 +69,7 @@ function App () {
             <Route path="/" element={<Layout/>}>
               <Route index element={<Welcome/>}/>
               <Route path="/welcome" element={<Welcome/>}/>
-              <Route path="/account-list" element={<AccountList/>}/>
+              <Route path="/wallet-info" element={<WalletInfo/>}/>
             </Route>
           </Routes>
         </HashRouter>
