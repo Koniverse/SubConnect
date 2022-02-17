@@ -1,5 +1,7 @@
 import { WalletError } from './errors/BaseWalletError';
-import { Unsubcall } from '@polkadot/extension-inject/types';
+import { InjectedMetadata, InjectedProvider, Unsubcall } from '@polkadot/extension-inject/types';
+import { SignerPayloadJSON, SignerPayloadRaw, SignerResult } from '@polkadot/types/types/extrinsic';
+import { Signer as InjectedSigner } from '@polkadot/api/types';
 
 export type SubscriptionFn = (
   accounts: WalletAccount[] | undefined
@@ -44,12 +46,15 @@ interface WalletExtension {
   // The raw signer object for convenience. Usually the implementer can derive this from the extension object.
   // Refer to a specific wallet's extension documentation
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  signer: any;
+  signer: InjectedSigner | undefined;
+
+  metadata: InjectedMetadata | undefined;
+
+  provider: InjectedProvider | undefined;
 }
 
 interface Signer {
-  // Sign function
-  sign?: (address: string, payload: string) => unknown;
+
 }
 
 interface Connector {

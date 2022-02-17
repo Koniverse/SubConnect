@@ -2,7 +2,7 @@ import type { Signer as InjectedSigner } from '@polkadot/api/types';
 import { SubscriptionFn, Wallet } from '../types';
 import { AuthError } from '../errors/AuthError';
 import { WalletError } from '../errors/BaseWalletError';
-import { InjectedAccount, InjectedExtension, InjectedWindow } from '@polkadot/extension-inject/types';
+import { InjectedAccount, InjectedExtension, InjectedMetadata, InjectedProvider, InjectedWindow } from '@polkadot/extension-inject/types';
 
 const DAPP_NAME = 'Subwallet Connect';
 
@@ -17,6 +17,8 @@ export class BaseDotsamaWallet implements Wallet {
 
   _extension: InjectedExtension | undefined;
   _signer: InjectedSigner | undefined;
+  _metadata: InjectedMetadata | undefined;
+  _provider: InjectedProvider | undefined;
 
   // API docs: https://polkadot.js.org/docs/extension/
   get extension () {
@@ -26,6 +28,14 @@ export class BaseDotsamaWallet implements Wallet {
   // API docs: https://polkadot.js.org/docs/extension/
   get signer () {
     return this._signer;
+  }
+
+  get metadata () {
+    return this._metadata;
+  }
+
+  get provider () {
+    return this._provider;
   }
 
   get installed () {
@@ -71,6 +81,8 @@ export class BaseDotsamaWallet implements Wallet {
 
       this._extension = extension;
       this._signer = extension?.signer;
+      this._metadata = extension?.metadata;
+      this._provider = extension?.provider
     } catch (err) {
       throw this.transformError(err as WalletError);
     }

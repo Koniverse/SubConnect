@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { WalletContext } from '../contexts';
 import './AccountList.scss'
-import { Button, Divider } from 'antd';
+import { Button, Divider, message } from 'antd';
 import { FormOutlined } from '@ant-design/icons';
 
 interface Props {
@@ -12,10 +12,14 @@ function AccountList ({}: Props): React.ReactElement<Props> {
   const walletContext = useContext(WalletContext)
   const signDummy = (address: string) => {
     const signer = walletContext.wallet?.signer
-    if (signer && signer.signPayload) {
+    if (signer && signer.signRaw) {
       const signPromise = signer.signRaw({ address, data: 'This is dummy message', type: 'bytes' });
+      const key = 'sign-status'
+      message.loading({content: 'Signing', key})
       signPromise.then((rs: any) => {
-        console.log(rs);
+        message.success({content: 'Sign Successfully!', key})
+      }).catch((error) => {
+        message.warn({content: 'Sign Failed or Cancelled!', key})
       })
     }
   }

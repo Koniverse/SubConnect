@@ -55,7 +55,7 @@ function App () {
           infos && setAccounts(infos)
         }
 
-        setTimeout(fetchInfo, 100);
+        setTimeout(fetchInfo, 150);
       }
     },
     [walletKey],
