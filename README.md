@@ -1,5 +1,8 @@
 # SubConnect
-A single Web3 provider solution for all Wallets in Dotsama Ecosystem and blockchains built on Substrate
+A single Web3 provider solution for test all Wallets in Dotsama Ecosystem and blockchains built on Substrate.
+
+
+![./public/SubConnect.png](./public/SubConnect.png)
 
 ## Available Scripts
 
