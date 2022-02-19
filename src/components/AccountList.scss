@@ -3,12 +3,33 @@
 }
 
 .account-item {
-  padding: 16px;
-  border: 1px solid #e6e6e6;
-  border-radius: 6px;
+  padding: 16px 20px;
+  border: 2px solid #151A30;
+  border-radius: 8px;
   margin-bottom: 16px;
 
   .info {
-    margin-bottom: 8px;
+    margin-bottom: 16px;
   }
+}
+
+.account-item-info {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.account-item__title {
+  font-size: 15px;
+  line-height: 26px;
+  font-weight: 500;
+  padding-right: 5px;
+}
+
+.account-item__content {
+
+  font-size: 15px;
+  line-height: 26px;
+  color: #7B8098;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }

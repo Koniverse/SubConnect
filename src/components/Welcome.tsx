@@ -22,7 +22,7 @@ function Welcome ({}: Props): React.ReactElement<Props> {
   return (<div className={'welcome-wrapper'}>
     <div className={'welcome-content'}>
       <div className='welcome-content__text'>Welcome to SubWallet Connect</div>
-      <Button className='welcome-content__btn' onClick={selectWallet.open}>Select Wallet</Button>
+      <Button className='sub-wallet-btn sub-wallet-btn-normal-size' onClick={selectWallet.open}>Select Wallet</Button>
     </div>
   </div>);
 }

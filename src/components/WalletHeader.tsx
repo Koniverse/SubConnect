@@ -26,7 +26,7 @@ function WalletHeader ({visible}: Props): React.ReactElement<Props> {
           {wallet?.title}
         </div>
         <div className="spacer"/>
-        <Button className={'select-wallet'} type={'primary'} onClick={selectWallet.open}>Select Wallet</Button>
+        <Button className='sub-wallet-btn sub-wallet-btn-small-size' type={'primary'} onClick={selectWallet.open}>Select Wallet</Button>
       </div>
     </div>
   </header>);

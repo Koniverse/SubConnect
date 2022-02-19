@@ -5,10 +5,8 @@ import { getWalletBySource } from './lib/wallets';
 import { Wallet, WalletAccount } from './lib/types';
 import Welcome from './components/Welcome';
 import { Route, Routes, HashRouter } from 'react-router-dom';
-import AccountList from './components/AccountList';
 import Layout from './components/Layout';
 import { OpenSelectWallet, WalletContext } from './contexts';
-import SelectWalletModal from './components/SelectWalletModal';
 import WalletInfo from './pages/WalletInfo';
 
 function App () {
@@ -16,6 +14,14 @@ function App () {
   const [currentWallet, setCurrentWallet] = useState(getWalletBySource(walletKey));
   const [isSelectWallet, setIsSelectWallet] = useState(false);
   const [accounts, setAccounts] = useState<WalletAccount[]>([]);
+  let subWalletTheme = window.localStorage.getItem('sub-wallet-theme');
+
+  if (!subWalletTheme) {
+    window.localStorage.setItem('sub-wallet-theme', 'dark');
+    subWalletTheme = 'dark'
+  }
+
+  document.body.style.backgroundColor = subWalletTheme === 'dark' ? '#020412' : '#FFF';
 
   const selectWallet = async (wallet: Wallet) => {
     setCurrentWallet(currentWallet);

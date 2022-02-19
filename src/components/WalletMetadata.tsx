@@ -3,7 +3,7 @@ import { WalletContext } from '../contexts';
 import './WalletMetadata.scss'
 import { Button, message } from 'antd';
 import { InjectedMetadataKnown, MetadataDef } from '@polkadot/extension-inject/types';
-import { PlusSquareOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined } from '@ant-design/icons';
 
 interface Props {
   className?: string;
@@ -60,15 +60,17 @@ function WalletMetadata ({}: Props): React.ReactElement<Props> {
     <div className={'metadata-list'}>
       {injectedMetas.map(meta =>
         <div className="metadata-item">
-          <div>
-            <b>Genesis Hash: </b> {meta.genesisHash}
+          <div className='metadata-item-info'>
+            <span className='metadata-item__title'>Genesis Hash:</span>
+            <span className='metadata-item__content'>{meta.genesisHash}</span>
           </div>
-          <div>
-            <b>Spec Version: </b> {meta.specVersion}
+          <div className='metadata-item-info'>
+            <span className='metadata-item__title'>Spec Version:</span>
+            <span className='metadata-item__content'>{meta.specVersion}</span>
           </div>
         </div>)}
     </div>
-    <Button onClick={addMetadata} type={'primary'} icon={<PlusSquareOutlined />}>Add Example Metadata</Button>
+    <Button className='sub-wallet-btn sub-wallet-icon-btn' onClick={addMetadata} type={'primary'} icon={<PlusCircleOutlined />}>Add Example Metadata</Button>
   </div>);
 }
 
