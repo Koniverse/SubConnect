@@ -1,8 +1,9 @@
 import React, { useContext, useEffect } from 'react';
-import { Button } from 'antd';
 import './Welcome.scss'
 import { OpenSelectWallet, WalletContext } from '../contexts';
 import { useNavigate } from 'react-router-dom';
+import {Button} from "antd";
+
 
 interface Props {
 }
@@ -20,8 +21,8 @@ function Welcome ({}: Props): React.ReactElement<Props> {
 
   return (<div className={'welcome-wrapper'}>
     <div className={'welcome-content'}>
-      <h2>Welcome to SubWallet Connect</h2>
-      <Button type={'primary'} onClick={selectWallet.open}>Select Wallet</Button>
+      <div className='welcome-content__text'>Welcome to SubWallet Connect</div>
+      <Button className='welcome-content__btn' onClick={selectWallet.open}>Select Wallet</Button>
     </div>
   </div>);
 }

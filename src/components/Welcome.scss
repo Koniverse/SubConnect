@@ -2,10 +2,45 @@
   position: relative;
   width: 100vw;
   height: 100vh;
-  display: table-cell;
-  vertical-align: middle;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .welcome-content {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.welcome-content__text {
+  font-size: 32px;
+  line-height: 44px;
+  color: #FFF;
+  font-weight: 500;
+  padding-bottom: 50px;
+}
+
+.welcome-content__btn {
+  padding: 11px 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #004BFF;
+  border: none;
+  border-radius: 8px;
+  height: auto;
+}
+
+.welcome-content__btn > span {
+  font-size: 15px;
+  line-height: 26px;
+  font-weight: 500;
+  color: #fff;
+  padding: 0 20px;
+}
+
+.welcome-content__btn:hover,.welcome-content__btn:focus,.welcome-content__btn:active {
+  background-color: #004BFF;
 }

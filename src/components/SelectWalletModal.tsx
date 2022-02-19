@@ -16,6 +16,8 @@ function SelectWalletModal ({}: Props): React.ReactElement<Props> {
 
   return <Modal
     title="Select Wallet"
+    className='select-wallet-modal'
+    maskStyle={{backgroundColor: '#262C4A'}}
     centered
     visible={openSelectWalletContext.isOpen}
     footer={false}
