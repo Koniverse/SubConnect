@@ -30,6 +30,7 @@ function Layout (): React.ReactElement<null> {
     <div className={`main-content ${theme === 'dark' ? '-dark' : '-light'}`}>
       <Switch
           className='sub-wallet-switch-theme'
+          defaultChecked={theme === 'light'}
           checkedChildren='Light'
           unCheckedChildren='Dark'
           onChange={_onChangeTheme}
