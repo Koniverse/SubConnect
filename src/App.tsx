@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './App.scss';
 import { useLocalStorage } from './hooks/useLocalStorage/useLocalStorage';
-import { getWalletBySource } from './lib/wallets';
-import { Wallet, WalletAccount } from './lib/types';
+import { getWalletBySource } from './lib/wallets/wallets';
+import { Wallet, WalletAccount } from './lib/wallets/types';
 import Welcome from './components/Welcome';
 import { Route, Routes, HashRouter } from 'react-router-dom';
 import Layout from './components/Layout';

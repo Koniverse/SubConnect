@@ -1,6 +1,6 @@
 import React from 'react';
 import './SelectWallet.scss'
-import { getWallets } from '../lib/wallets';
+import { getWallets } from '../lib/wallets/wallets';
 
 interface Props {
   onSelectWallet: (walletKey: string) => void

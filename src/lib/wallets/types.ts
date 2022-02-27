@@ -1,6 +1,5 @@
 import { WalletError } from './errors/BaseWalletError';
 import { InjectedMetadata, InjectedProvider, Unsubcall } from '@polkadot/extension-inject/types';
-import { SignerPayloadJSON, SignerPayloadRaw, SignerResult } from '@polkadot/types/types/extrinsic';
 import { Signer as InjectedSigner } from '@polkadot/api/types';
 
 export type SubscriptionFn = (

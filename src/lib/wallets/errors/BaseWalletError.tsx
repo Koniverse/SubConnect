@@ -1,3 +1,5 @@
+// This file is base on https://github.com/TalismanSociety/talisman-connect/blob/master/libs/wallets/src/lib/errors/AuthError.ts with some modifications
+
 import { Wallet } from '../types';
 
 export interface WalletError extends Error {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Wallet, WalletAccount } from '../lib/types';
+import { Wallet, WalletAccount } from '../lib/wallets/types';
 
 
 interface WalletContextInterface {

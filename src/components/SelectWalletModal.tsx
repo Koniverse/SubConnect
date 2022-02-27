@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import './SelectWallet.scss'
-import { getWalletBySource, getWallets } from '../lib/wallets';
+import { getWalletBySource, getWallets } from '../lib/wallets/wallets';
 import { Modal } from 'antd';
 import SelectWallet from './SelectWallet';
 import { OpenSelectWallet, WalletContext } from '../contexts';
