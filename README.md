@@ -17,7 +17,7 @@ Run to install project dependencies. Wait until all done before use another comm
 ### `yarn start`
 
 Runs the app in the development mode.\
-Open [http://localhost:3333](http://localhost:3000) to view it in the browser.
+Open [http://localhost:3333](http://localhost:3333) to view it in the browser.
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
@@ -35,5 +35,5 @@ Your app is ready to be deployed!
 
 ## Documentations:
 You can find more information about this project with before link:
-- [How to project and another DApp interact with DotSama wallet extension](https://github.com/Koniverse/SubConnect/wiki/How-to-integrate-SubWallet-and-other-DotSama-Wallet-to-DApp)
+- [How to project and another DApp interact with Dotsama wallet extension](https://github.com/Koniverse/SubConnect/wiki/How-to-integrate-SubWallet-and-other-Dotsama-Wallet-to-DApp)
 - [How to work with wallet interface, add to support more wallet](https://github.com/Koniverse/SubConnect/blob/master/src/lib/wallets/README.md)

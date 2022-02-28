@@ -1,6 +1,6 @@
 ## Overview
 
-This library aim to connect multiple extension wallets of DotSama ecosystem that use the `@polkadot/extension-dapp`
+This library aim to connect multiple extension wallets of Dotsama ecosystem that use the `@polkadot/extension-dapp`
 package with web3Enable. You can use this with any webUI to get features of extension.
 
 We built this base
@@ -86,6 +86,21 @@ To add new wallet you should you create a folder like `polkadotjs-wallet`
     }
     
     const supportedWallets = [new PolkadotjsWallet(), new SubWallet(), new TalismanWallet(), new NewWallet()]; // new wallet here
-    
     ```
-  
+    
+---
+## Functions
+Basic functions from wallet.ts:
+- `getWallets(): Wallet[]`: Get all supported wallets
+- `getWalletBySource( source: string | unknown )`: Get wallet by extensionName
+- `isWalletInstalled(source: string | unknown)` Check installation, activation of a wallet.
+
+Basic functions of wallets (BaseDotsamaWallet):
+- `wallet.intalled`: Check extension is installed and activated or not by checking object `window.injectedWeb3`
+- `wallet.enable(): Promise<void>`: Enable wallet with your url by authentication popup in the first time and any time before use another wallet functions.
+- `wallet.getAccounts(): WalletAccount[]`: Get all account of the wallet.
+- `wallet.subscribeAccounts(callback): UnsubscribeFn`: Get and subscribe account changes. This will return self unsubscribe function.
+- `wallet.extention`: Return `InjectExtension` object that is provided wallet extension. You can found all extension interface in package `@polkadot/extension-inject`. We also make quick access of extension with these props:
+  - `wallet.signer`: Quick access of `wallet.extension.signer`
+  - `wallet.metadata`: Quick access of `wallet.extension.metadata`
+  - `wallet.provider`: Quick access of `wallet.extension.provider`
