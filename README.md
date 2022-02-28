@@ -34,6 +34,6 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 ## Documentations:
-You can find more information about this project with before link:
-- [How to project and another DApp interact with Dotsama wallet extension](https://github.com/Koniverse/SubConnect/wiki/How-to-integrate-SubWallet-and-other-Dotsama-Wallet-to-DApp)
-- [How to work with wallet interface, add to support more wallet](https://github.com/Koniverse/SubConnect/blob/master/src/lib/wallets/README.md)
+You can find more information about this project with below link:
+- [How to project and another DApp interact with Dotsama wallet extensions](https://github.com/Koniverse/SubConnect/wiki/How-to-integrate-SubWallet-and-other-Dotsama-Wallet-to-DApp)
+- [How to work with wallets interface, add to support more wallets](https://github.com/Koniverse/SubConnect/blob/master/src/lib/wallets/README.md)
