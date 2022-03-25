@@ -53,6 +53,29 @@ if (wallet) {
 }
 ```
 
+You also can use object signer with [smart contract](https://polkadot.js.org/docs/api-contract/start/contract.read/) call
+
+```typescript
+const contract = await new ContractPromise(api, abi, address);
+const address = '...' // Account address
+const wallet = getWalletBySource('subwallet-js') as BaseDotsamaWallet;
+if (wallet) {
+  await wallet.enable()
+  const signer = wallet.signer;
+  if (signer && signer.signRaw && signer.signPayload) {
+    await contract.tx
+      .doSomething({ /* Smart contract method input go here */ })
+      .signAndSend(
+        address,
+        { signer },
+        async ({ status, dispatchError }) => {
+          // Handle status callback here
+        }
+      );
+    //Run something after fisish
+  }
+}
+```
 ---
 
 ## Add more wallet to this library
