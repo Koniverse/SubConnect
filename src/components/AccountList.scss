@@ -11,6 +11,15 @@
   .info {
     margin-bottom: 16px;
   }
+
+  .actions {
+    overflow: hidden;
+
+    button {
+      float: left;
+      margin-right: 12px;
+    }
+  }
 }
 
 .account-item-info {
