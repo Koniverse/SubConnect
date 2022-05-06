@@ -7,6 +7,9 @@ We built this base
 on [@talisman-connect/wallets](https://github.com/TalismanSociety/talisman-connect/tree/master/libs/wallets) with some
 modifications.
 
+This is main idea of this library
+![image](https://user-images.githubusercontent.com/11567273/167062070-54a84695-fec2-4144-8bcb-71db98d565b4.png)
+
 ---
 
 ## Getting start
