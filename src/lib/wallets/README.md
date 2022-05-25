@@ -8,7 +8,7 @@ on [@talisman-connect/wallets](https://github.com/TalismanSociety/talisman-conne
 modifications.
 
 This is main idea of this library
-![image](https://user-images.githubusercontent.com/11567273/167062070-54a84695-fec2-4144-8bcb-71db98d565b4.png)
+![image](https://user-images.githubusercontent.com/11567273/170217213-5f663822-04b8-4231-8d2b-9a930d35227f.png)
 
 ---
 
