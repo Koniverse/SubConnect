@@ -6,8 +6,6 @@
     "rootDir": "./src"
   },
   "references": [
-    { "path": "../sub-connect/tsconfig.build.json"
-    },
     { "path": "../wallet-connect/tsconfig.build.json"
     }
   ]

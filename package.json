@@ -1,32 +1,45 @@
 {
   "author": "Koni Studio",
+  "bugs": "https://github.com/Koniverse/SubConnect/issues",
+  "homepage": "https://github.com/Koniverse/SubConnect#readme",
   "license": "Apache-2.0",
-  "version": "0.1.0",
   "packageManager": "yarn@3.2.0",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/polkadot-js/api.git"
+    "url": "https://github.com/Koniverse/SubConnect.git"
   },
   "sideEffects": false,
-  "type": "commonjs",
+  "version": "0.2.0",
   "workspaces": [
     "packages/*"
   ],
+  "bin": {
+    "koni-ci-build-dev": "./scripts/koni-ci-build-dev.mjs",
+    "koni-ci-ghact-build": "./scripts/koni-ci-ghact-build.mjs",
+    "koni-dev-build-ts": "./scripts/koni-dev-build-ts.mjs"
+  },
   "scripts": {
-    "start": "yarn watch",
-    "lint": "polkadot-dev-run-lint",
+    "build": "koni-dev-build-ts",
+    "build:ui": "cd packages/sub-connect && yarn polkadot-exec-webpack --config webpack.config.cjs --mode production",
     "clean": "polkadot-dev-clean-build",
-    "test": "polkadot-dev-run-test --detectOpenHandles --testPathIgnorePatterns='/node_modules/|.*/ignore-.*\\.(test|spec)\\..*'",
-    "build:ui": "packages/sub-connect && yarn polkadot-exec-webpack --config webpack.config.cjs --mode production",
+    "lint": "polkadot-dev-run-lint",
+    "start": "yarn watch",
+    "test": "polkadot-dev-run-test --detectOpenHandles'",
     "watch": "cd packages/sub-connect && yarn polkadot-exec-webpack --config webpack.watch.cjs --mode development --watch"
   },
   "devDependencies": {
-    "@polkadot/dev": "^0.66.28"
+    "@polkadot/dev": "^0.66.28",
+    "jest-environment-jsdom": "^28.1.0",
+    "jest-svg-transformer": "^1.0.0",
+    "jest-transform-stub": "^2.0.0"
   },
   "resolutions": {
-    "typescript": "^4.6.4",
+    "@babel/runtime": "^7.16.7",
     "@polkadot/api": "*",
-    "@polkadot/types": "*"
+    "@polkadot/types": "*",
+    "@polkadot/util": "*",
+    "@types/node": "^16.7.13",
+    "typescript": "^4.6.4"
   }
 }

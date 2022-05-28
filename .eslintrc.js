@@ -8,6 +8,7 @@ module.exports = {
   ignorePatterns: [
     ...base.ignorePatterns,
     "webpack.*js",
+    "koni*.mjs",
     "**/build/**.*",
   ],
   parserOptions: {

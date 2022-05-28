@@ -169,8 +169,8 @@ module.exports = (entry, alias = {}, useSplitChunk = false) => {
       ]
     },
     output: {
-      chunkFilename: '[name].js',
-      filename: '[name].js',
+      chunkFilename: '[name].[contenthash].js',
+      filename: '[name].[contenthash].js',
       globalObject: '(typeof self !== \'undefined\' ? self : this)',
       path: path.join(__dirname, 'build'),
       publicPath: ''
@@ -218,21 +218,7 @@ module.exports = (entry, alias = {}, useSplitChunk = false) => {
         ...alias,
         'react/jsx-runtime': require.resolve('react/jsx-runtime')
       }),
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
-      fallback: {
-        crypto: require.resolve('crypto-browserify'),
-        path: require.resolve('path-browserify'),
-        stream: require.resolve('stream-browserify'),
-        os: require.resolve('os-browserify/browser'),
-        http: require.resolve('stream-http'),
-        https: require.resolve('https-browserify'),
-        assert: require.resolve('assert'),
-        zlib: false,
-        url: false
-        // http: false,
-        // zlib: require.resolve("browserify-zlib"),
-        // url: require.resolve("url/")
-      }
+      extensions: ['.js', '.jsx', '.ts', '.tsx']
     },
     watch: false
   };

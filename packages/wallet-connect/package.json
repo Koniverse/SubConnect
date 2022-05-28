@@ -3,7 +3,7 @@
   "bugs": "https://github.com/Koniverse/SubConnect/issues",
   "contributors": [],
   "description": "Provides an interfaces around the injected globals for ease of access by dapp developers.",
-  "homepage": "https://github.com/Koniverse/SubConnect/tree/master/packages/extension-dapp#readme",
+  "homepage": "https://github.com/Koniverse/SubConnect/tree/master/packages/wallet-connect#readme",
   "license": "Apache-2.0",
   "maintainers": [],
   "name": "@subwallet/wallet-connect",
@@ -21,12 +21,9 @@
   "main": "index.js",
   "dependencies": {
     "@babel/runtime": "^7.16.7",
-    "@polkadot/api": "^8.5.1",
     "@polkadot/extension-dapp": "^0.43.2",
-    "@polkadot/extension-inject": "^0.43.2"
-  },
-  "peerDependencies": {},
-  "devDependencies": {
-    "@polkadot/types": "^8.5.1"
+    "@polkadot/extension-inject": "^0.43.2",
+    "@polkadot/types": "^8.5.1",
+    "@polkadot/util": "^9.2.1"
   }
 }

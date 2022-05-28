@@ -4,5 +4,6 @@
     "baseUrl": "..",
     "outDir": "./build",
     "rootDir": "./src"
-  }
+  },
+  "references": []
 }
