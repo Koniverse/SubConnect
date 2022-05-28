@@ -1,55 +1,32 @@
 {
-  "name": "sub-connect",
+  "author": "Koni Studio",
+  "license": "Apache-2.0",
   "version": "0.1.0",
+  "packageManager": "yarn@3.2.0",
   "private": true,
-  "dependencies": {
-    "@ant-design/icons": "^4.7.0",
-    "@polkadot/api": "^7.7.1",
-    "@polkadot/extension-dapp": "^0.42.7",
-    "@polkadot/extension-inject": "^0.42.7",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.0.0",
-    "@testing-library/user-event": "^13.2.1",
-    "@types/jest": "^27.0.1",
-    "@types/node": "^16.7.13",
-    "@types/react": "^17.0.20",
-    "@types/react-dom": "^17.0.9",
-    "antd": "^4.18.6",
-    "less": "^4.1.2",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-router-dom": "^6.2.1",
-    "react-scripts": "5.0.0",
-    "sass": "^1.49.7",
-    "typescript": "^4.4.2",
-    "web-vitals": "^2.1.0"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/polkadot-js/api.git"
   },
+  "sideEffects": false,
+  "type": "commonjs",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "start": "cross-env PORT=3333 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "start": "yarn watch",
+    "lint": "polkadot-dev-run-lint",
+    "clean": "polkadot-dev-clean-build",
+    "test": "polkadot-dev-run-test --detectOpenHandles --testPathIgnorePatterns='/node_modules/|.*/ignore-.*\\.(test|spec)\\..*'",
+    "build:ui": "packages/sub-connect && yarn polkadot-exec-webpack --config webpack.config.cjs --mode production",
+    "watch": "cd packages/sub-connect && yarn polkadot-exec-webpack --config webpack.watch.cjs --mode development --watch"
   },
   "devDependencies": {
-    "@testing-library/react-hooks": "^7.0.2",
-    "cross-env": "^7.0.3"
+    "@polkadot/dev": "^0.66.28"
+  },
+  "resolutions": {
+    "typescript": "^4.6.4",
+    "@polkadot/api": "*",
+    "@polkadot/types": "*"
   }
 }

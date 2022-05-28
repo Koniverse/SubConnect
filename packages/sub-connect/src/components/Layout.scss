@@ -1,0 +1,29 @@
+.ant-switch.sub-wallet-switch-theme {
+  position: absolute;
+}
+
+.sub-wallet-switch-theme {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  z-index: 1000;
+  background-color: #004BFF;
+}
+
+@media (max-width: 840px) {
+  .sub-wallet-switch-theme {
+    right: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sub-wallet-switch-theme {
+    right: 250px;
+  }
+}
+
+@media (max-width: 600px) {
+  .sub-wallet-switch-theme {
+    right: 200px;
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "composite": true
+  },
+  "files": [],
+  "references": [
+    { "path": "./packages/sub-connect/tsconfig.build.json" },
+    { "path": "./packages/sub-connect/tsconfig.json" }
+  ]
+}

@@ -1,23 +1,31 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# production
-/build
-
-# misc
+_book/
+build/
+build-cjs/
+build-esm/
+build-docs/
+coverage/
+docs/.vuepress/dist/
+docs/substrate/*.md
+node_modules/
+tmp/
+NOTES.md
+.idea
 .DS_Store
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-
+.npmrc
+.rpt2_cache
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+.pnp.*
+.vscode/
+cc-test-reporter
+lerna-debug.log*
 npm-debug.log*
+package-lock.json
+tsconfig*buildinfo
 yarn-debug.log*
 yarn-error.log*
