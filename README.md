@@ -1,8 +1,7 @@
 # SubConnect
 A single Web3 provider solution for test all Wallets in Dotsama Ecosystem and blockchains built on Substrate.
 
-
-![./public/SubConnect.png](./public/SubConnect.png)
+![image](https://user-images.githubusercontent.com/11567273/170807399-78fa0f2c-0c45-443a-9573-1c830b524149.png)
 
 ## Requirement:
 This project require [nodejs](https://nodejs.org/en/) and [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable) before start.
@@ -13,25 +12,12 @@ In the project directory, you can start work project with these commands:
 ### `yarn install`
 Run to install project dependencies. Wait until all done before use another command.
 
-
 ### `yarn start`
-
 Runs the app in the development mode.\
 Open [http://localhost:3333](http://localhost:3333) to view it in the browser.
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
 ## Documentations:
 You can find more information about this project with below link:
