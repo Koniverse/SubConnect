@@ -9,7 +9,7 @@ We built this packages with idea and some code from [@talisman-connect/wallets](
 
 Here is main concept of this package:
 
-![image](https://user-images.githubusercontent.com/11567273/170217213-5f663822-04b8-4231-8d2b-9a930d35227f.png)
+![image](https://user-images.githubusercontent.com/11567273/170807488-fc23c8af-e6fa-4bf5-ba20-3968b9a6b23f.png)
 
 ---
 
