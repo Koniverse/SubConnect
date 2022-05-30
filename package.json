@@ -26,7 +26,7 @@
     "lint": "polkadot-dev-run-lint",
     "start": "yarn watch",
     "test": "polkadot-dev-run-test --detectOpenHandles'",
-    "watch": "cd packages/sub-connect && yarn polkadot-exec-webpack --config webpack.watch.cjs --mode development --watch"
+    "watch": "cd packages/sub-connect && yarn webpack-dev-server --config webpack.watch.cjs --mode development"
   },
   "devDependencies": {
     "@polkadot/dev": "^0.66.28",
