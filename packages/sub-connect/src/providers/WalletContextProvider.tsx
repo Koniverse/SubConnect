@@ -43,20 +43,18 @@ export function WalletContextProvider ({ children }: Props) {
 
   const afterSelectEvmWallet = useCallback(
     async (wallet: EvmWallet) => {
-      const extension = wallet.extension;
-
-      await extension?.request({ method: 'eth_requestAccounts' });
+      await wallet?.enable(); // Quick call extension?.request({ method: 'eth_requestAccounts' });
     },
     []
   );
 
   const selectEvmWallet = useCallback(
     async (wallet: EvmWallet) => {
+      await afterSelectEvmWallet(wallet);
+
       setCurrentWallet(currentWallet);
 
       setWalletKey(wallet.extensionName);
-
-      await afterSelectEvmWallet(wallet);
     },
     [afterSelectEvmWallet, currentWallet, setWalletKey]
   );

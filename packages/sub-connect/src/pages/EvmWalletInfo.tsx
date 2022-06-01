@@ -32,11 +32,11 @@ function EvmWalletInfo (): React.ReactElement {
   );
 
   useEffect(() => {
-    wallet?.extension?.request<string>({ method: 'eth_chainId' }).then((_chainId) => {
+    wallet?.request<string>({ method: 'eth_chainId' }).then((_chainId) => {
       _chainId && setChainId(_chainId);
     }).catch(console.error);
 
-    wallet?.extension?.request<string[]>({ method: 'eth_accounts' }).then((_accounts) => {
+    wallet?.request<string[]>({ method: 'eth_accounts' }).then((_accounts) => {
       _accounts && setAccounts(_accounts as string[]);
 
       if (_accounts && _accounts[0]) {
@@ -51,7 +51,7 @@ function EvmWalletInfo (): React.ReactElement {
     wallet?.extension?.on('accountsChanged', (account) => {
       windowReload();
     });
-  }, [getBalance, wallet?.extension]);
+  }, [getBalance, wallet, wallet?.extension]);
 
   return <div className={'boxed-container'}>
     <div className={'wallet-info-page'}>

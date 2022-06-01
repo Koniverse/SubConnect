@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { MetaMaskInpageProvider } from '@metamask/providers';
+import { RequestArguments } from '@metamask/providers/dist/BaseProvider';
+import { Maybe } from '@metamask/types';
 import { EvmWallet, EvmWalletInfo, WalletLogoProps } from '@subwallet/wallet-connect/types';
 
 export class BaseEvmWallet implements EvmWallet {
@@ -10,7 +12,7 @@ export class BaseEvmWallet implements EvmWallet {
   logo: WalletLogoProps;
   title: string;
   isSetGlobalString: string;
-  initEvent: string;
+  initEvent?: string;
 
   _extension: MetaMaskInpageProvider | undefined;
 
@@ -21,17 +23,61 @@ export class BaseEvmWallet implements EvmWallet {
     this.installUrl = installUrl;
     this.isSetGlobalString = isSetGlobalString;
     this.initEvent = initEvent;
+
+    this.fullLookupProvider()
+      .then((extension) => {
+        this._extension = extension;
+      }).catch(console.log);
   }
 
-  private lookupExtension () {
+  private lookupProvider () {
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     return ((window && window[this.extensionName]) || (window?.ethereum && window?.ethereum[this.isSetGlobalString])) as MetaMaskInpageProvider;
   }
 
+  private async fullLookupProvider (timeout = 3000): Promise<MetaMaskInpageProvider | undefined> {
+    return new Promise((resolve, reject) => {
+      let handled = false;
+      let currentProvider = this.lookupProvider();
+      const initEvent = this.initEvent;
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const self = this;
+
+      if (currentProvider) {
+        resolve(currentProvider);
+      } else if (initEvent) {
+        window.addEventListener(initEvent, () => {
+          currentProvider = this.lookupProvider();
+          handleProvider();
+        }, { once: true });
+        setTimeout(() => {
+          handleProvider();
+        }, timeout);
+      }
+
+      function handleProvider () {
+        if (handled) {
+          return;
+        }
+
+        handled = true;
+
+        // @ts-ignore
+        window.removeEventListener(initEvent, handleProvider);
+
+        if (!currentProvider) {
+          console.warn(`Not found provider of ${self.title}(${self.extensionName})`);
+        }
+
+        resolve(currentProvider);
+      }
+    });
+  }
+
   get extension () {
     if (!this._extension) {
-      this._extension = this.lookupExtension();
+      this._extension = this.lookupProvider();
     }
 
     return this._extension;
@@ -39,6 +85,25 @@ export class BaseEvmWallet implements EvmWallet {
 
   get installed () {
     return !!this.extension;
+  }
+
+  enable (): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      this.request<string[]>({ method: 'eth_requestAccounts' })
+        .then((accounts) => {
+          if (accounts && accounts.length > 0) {
+            resolve(true);
+          }
+
+          resolve(false);
+        }).catch((e) => {
+          reject(e);
+        });
+    });
+  }
+
+  request<T> (args: RequestArguments): Promise<Maybe<T>> {
+    return this.extension?.request(args);
   }
 
   // addProvider (provider: any): void {
