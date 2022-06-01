@@ -1,8 +1,9 @@
 // Copyright 2019-2022 @subwallet/sub-connect authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import { useLocalStorage } from '@subwallet/sub-connect/hooks/useLocalStorage/useLocalStorage';
 import { Switch } from 'antd';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 import { WalletContext } from '../contexts';
@@ -13,7 +14,7 @@ require('./Layout.scss');
 
 function Layout (): React.ReactElement<null> {
   const walletContext = useContext(WalletContext);
-  const [theme, setTheme] = useState<string>(window.localStorage.getItem('sub-wallet-theme') as string);
+  const [theme, setTheme] = useLocalStorage('sub-wallet-theme', 'dark');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,14 +24,8 @@ function Layout (): React.ReactElement<null> {
   }, [navigate, walletContext.wallet]);
 
   const _onChangeTheme = useCallback(() => {
-    if (theme === 'dark') {
-      setTheme('light');
-      window.localStorage.setItem('sub-wallet-theme', 'light');
-    } else if (theme === 'light') {
-      setTheme('dark');
-      window.localStorage.setItem('sub-wallet-theme', 'dark');
-    }
-  }, [theme]);
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  }, [setTheme, theme]);
 
   return (<div className={'main-layout '}>
     <div className={`main-content ${theme === 'dark' ? '-dark' : '-light'}`}>

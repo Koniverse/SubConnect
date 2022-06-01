@@ -15,10 +15,12 @@ function Welcome (): React.ReactElement {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (walletContext.wallet) {
+    if (walletContext.wallet && walletContext.walletType === 'substrate') {
       navigate('/wallet-info');
+    } else if (walletContext.wallet && walletContext.walletType === 'evm') {
+      navigate('/evm-wallet-info');
     }
-  }, [navigate, walletContext.wallet]);
+  }, [navigate, walletContext.wallet, walletContext.walletType]);
 
   return (<div className={'welcome-wrapper'}>
     <div className={'welcome-content'}>

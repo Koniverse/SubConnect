@@ -4,6 +4,7 @@
 import './SelectWallet.scss';
 
 import { getWalletBySource } from '@subwallet/wallet-connect/dotsama/wallets';
+import { getEvmWalletBySource } from '@subwallet/wallet-connect/evm/evmWallets';
 import { Modal } from 'antd';
 import React, { useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -20,10 +21,16 @@ function SelectWalletModal ({ theme }: Props): React.ReactElement<Props> {
   const walletContext = useContext(WalletContext);
   const navigate = useNavigate();
   const onSelectWallet = useCallback(
-    (walletKey) => {
-      walletContext.setWallet(getWalletBySource(walletKey));
-      openSelectWalletContext.close();
-      navigate('/wallet-info');
+    (walletKey, walletType: 'substrate' | 'evm' = 'substrate') => {
+      if (walletType === 'substrate') {
+        walletContext.setWallet(getWalletBySource(walletKey), walletType);
+        openSelectWalletContext.close();
+        navigate('/wallet-info');
+      } else {
+        walletContext.setWallet(getEvmWalletBySource(walletKey), walletType);
+        openSelectWalletContext.close();
+        navigate('/evm-wallet-info');
+      }
     },
     [navigate, openSelectWalletContext, walletContext]
   );

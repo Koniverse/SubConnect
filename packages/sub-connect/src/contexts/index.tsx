@@ -2,19 +2,22 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Wallet, WalletAccount } from '@subwallet/wallet-connect/src/types';
+import { EvmWallet } from '@subwallet/wallet-connect/types';
 import React from 'react';
 
-interface WalletContextInterface {
-  wallet: Wallet | undefined,
+export interface WalletContextInterface {
+  wallet: Wallet | EvmWallet | undefined,
   accounts: WalletAccount[],
-  setWallet: (wallet: Wallet | undefined) => void
+  setWallet: (wallet: Wallet | EvmWallet | undefined, walletType: 'substrate'|'evm') => void
+  walletType: 'substrate'|'evm';
 }
 
 export const WalletContext = React.createContext<WalletContextInterface>({
   wallet: undefined,
   accounts: [],
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setWallet: (wallet) => {}
+  setWallet: (wallet, walletType: 'substrate'|'evm') => {},
+  walletType: 'substrate'
 });
 
 interface OpenSelectWalletInterface {

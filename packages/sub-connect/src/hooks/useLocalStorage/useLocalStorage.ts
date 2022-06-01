@@ -14,10 +14,14 @@ export function useLocalStorage (
       typeof window !== 'undefined' ? window.localStorage.getItem(key) : false;
 
     if (item) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      setStoredValue(JSON.parse(item));
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        setStoredValue(JSON.parse(item));
+      } catch (e) {
+        setStoredValue(initialValue);
+      }
     }
-  }, [key, setStoredValue]);
+  }, [initialValue, key, setStoredValue]);
 
   const setValue = (value: string) => {
     setStoredValue(value);
