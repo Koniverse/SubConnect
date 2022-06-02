@@ -4,7 +4,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #020412;
-  color: #FFF;
 }
 
 #root {
@@ -70,4 +69,11 @@ code {
 
 .sub-wallet-sign-btn:hover, .sub-wallet-sign-btn:focus, .sub-wallet-sign-btn:active {
   background-color: #181E42;
+}
+
+.ant-input {
+  outline: none;
+  &:focus {
+    box-shadow: none;
+  }
 }

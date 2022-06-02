@@ -14,10 +14,19 @@
 
 .main-content.-dark {
   background-color: #020412;
+  color: #fff;
+
+
+  .ant-input {
+    background-color: #262C4A;
+    border-color: rgba(128, 128, 128, 0.2);
+    color: #ddd;
+  }
 }
 
 .main-content.-light {
   background-color: #FFF;
+  color: #444;
 
   .welcome-content__text, .wallet-title, .wallet-info-page__text, .account-item__title, .metadata-item__title {
     color: #020412;

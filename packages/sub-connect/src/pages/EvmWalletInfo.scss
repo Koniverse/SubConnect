@@ -1,5 +1,9 @@
 .evm-wallet-info-page {
   padding: 50px 8px;
+
+  input.code {
+    font-family: monospace;
+  }
 }
 
 .evm-wallet-info-page__text {
@@ -26,4 +30,25 @@
     width: 100%;
     margin-left: 16px;
   }
+}
+
+.evm-wallet-transaction_row {
+  display: flex;
+  margin-bottom: 16px;
+  align-items: center;
+
+  .label {
+    width: 110px;
+  }
+  .ant-input {
+    flex: 1;
+  }
+  .suffix {
+    padding-left: 12px
+  }
+}
+
+.transaction-button {
+  width: 100%;
+  margin-bottom: 8px;
 }
