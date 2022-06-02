@@ -218,7 +218,18 @@ module.exports = (entry, alias = {}, useSplitChunk = false) => {
         ...alias,
         'react/jsx-runtime': require.resolve('react/jsx-runtime')
       }),
-      extensions: ['.js', '.jsx', '.ts', '.tsx']
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      fallback: {
+        crypto: require.resolve('crypto-browserify'),
+        path: require.resolve('path-browserify'),
+        stream: require.resolve('stream-browserify'),
+        os: require.resolve('os-browserify/browser'),
+        http: require.resolve('stream-http'),
+        https: require.resolve('https-browserify'),
+        assert: require.resolve('assert'),
+        zlib: false,
+        url: false
+      }
     },
     watch: false
   };

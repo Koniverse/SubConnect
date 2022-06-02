@@ -1,0 +1,29 @@
+.evm-wallet-info-page {
+  padding: 50px 8px;
+}
+
+.evm-wallet-info-page__text {
+  font-size: 20px;
+  line-height: 32px;
+  font-weight: 500;
+  padding-bottom: 16px;
+}
+.evm-wallet-info-page__section {
+  margin-bottom: 24px;
+}
+
+.evm-wallet-info__button_group {
+  .ant-btn {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+}
+
+.evm-wallet-info__button_row {
+  display: flex;
+  margin-left: -16px;
+  .ant-btn {
+    width: 100%;
+    margin-left: 16px;
+  }
+}
