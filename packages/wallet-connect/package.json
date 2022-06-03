@@ -21,6 +21,8 @@
   "main": "index.js",
   "dependencies": {
     "@babel/runtime": "^7.16.7",
+    "@metamask/providers": "^8.1.1",
+    "@metamask/types": "^1.1.0",
     "@polkadot/extension-dapp": "^0.43.2",
     "@polkadot/extension-inject": "^0.43.2",
     "@polkadot/types": "^8.5.1",
@@ -28,8 +30,6 @@
   },
   "devDependencies": {
     "@metamask/detect-provider": "^1.2.0",
-    "@metamask/providers": "^8.1.1",
-    "@metamask/types": "^1.1.0",
     "@types/web3-provider-engine": "^14.0.1"
   }
 }
