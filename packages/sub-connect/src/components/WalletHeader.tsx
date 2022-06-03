@@ -15,7 +15,7 @@ interface Props {
 function WalletHeader ({ visible }: Props): React.ReactElement<Props> {
   const walletContext = useContext(WalletContext);
   const selectWallet = useContext(OpenSelectWallet);
-  const wallet = walletContext.wallet;
+  const wallet = walletContext.wallet || walletContext.evmWallet;
 
   if (!visible) {
     return (<></>);
