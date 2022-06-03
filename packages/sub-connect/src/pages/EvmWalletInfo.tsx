@@ -7,7 +7,6 @@ import { RequestArguments } from '@metamask/providers/dist/BaseProvider';
 import { Maybe } from '@metamask/providers/dist/utils';
 import { METHOD_MAP } from '@subwallet/sub-connect/pages/methods';
 import { windowReload } from '@subwallet/sub-connect/utils/window';
-import { EvmWallet } from '@subwallet/wallet-connect/types';
 import { Button, Input, message, Select } from 'antd';
 import { recoverPersonalSignature, recoverTypedSignatureLegacy } from 'eth-sig-util';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
@@ -50,15 +49,13 @@ const SIGN_METHODS = {
 require('./EvmWalletInfo.scss');
 
 function EvmWalletInfo (): React.ReactElement {
-  const wallet = useContext(WalletContext).wallet as EvmWallet;
+  const wallet = useContext(WalletContext).evmWallet;
 
   const [accounts, setAccounts] = useState<string[]>([]);
   const [chainId, setChainId] = useState<number | undefined>(undefined);
   const [network, setNetwork] = useState<NetworkInfo | undefined>(undefined);
   const [balance, setBalance] = useState<number | undefined>(undefined);
 
-  // @ts-ignore
-  const [web3, setWeb3] = useState<Web3 | undefined>(undefined);
   const [lastestBlock, setLastestBlock] = useState<number | undefined>(undefined);
 
   // transaction
@@ -277,8 +274,10 @@ function EvmWalletInfo (): React.ReactElement {
       setSignatureValidation(recoveredAddress);
 
       if (recoveredAddress === from) {
+        // eslint-disable-next-line no-void
         void message.success('Verify Success!');
       } else {
+        // eslint-disable-next-line no-void
         void message.error('Signed address is different from current address');
       }
     },
@@ -399,7 +398,7 @@ function EvmWalletInfo (): React.ReactElement {
             value={signature}
           />
         </div>
-        {signMethod != 'ethSign' && <div>
+        {signMethod !== 'ethSign' && <div>
           <div className='evm-wallet-transaction_row'>
             <Button
               className='sub-wallet-btn sub-wallet-btn-small-size max-w'

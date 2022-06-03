@@ -59,19 +59,9 @@ export function WalletContextProvider ({ children }: Props) {
     [afterSelectEvmWallet, currentWallet, setWalletKey]
   );
 
-  const getWallet = useCallback(
-    (walletKey: string, walletType: string) => {
-      if (walletType === 'substrate') {
-        return getWalletBySource(walletKey);
-      } else {
-        return getEvmWalletBySource(walletKey);
-      }
-    },
-    []
-  );
-
   const walletContext = {
-    wallet: getWallet(walletKey, walletType),
+    wallet: getWalletBySource(walletKey),
+    evmWallet: getEvmWalletBySource(walletKey),
     accounts,
     setWallet: (wallet: Wallet | EvmWallet | undefined, walletType: 'substrate' | 'evm') => {
       if (walletType === 'substrate') {

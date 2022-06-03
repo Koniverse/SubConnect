@@ -18,7 +18,7 @@ function Layout (): React.ReactElement<null> {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!walletContext.wallet) {
+    if (!walletContext.wallet && !walletContext.evmWallet) {
       navigate('/welcome');
     }
 
@@ -26,7 +26,7 @@ function Layout (): React.ReactElement<null> {
 
     document.body.style.backgroundColor = isDark ? '#020412' : '#FFF';
     document.body.className = isDark ? 'dark-theme' : 'light-theme';
-  }, [theme, navigate, walletContext.wallet]);
+  }, [theme, navigate, walletContext]);
 
   const _onChangeTheme = useCallback(() => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
