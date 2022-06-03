@@ -12,7 +12,7 @@ body {
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  monospace;
 }
 
 .sub-wallet-btn {
@@ -34,7 +34,7 @@ code {
   color: #fff;
 }
 
-.sub-wallet-btn:hover,.sub-wallet-btn:focus,.sub-wallet-btn:active {
+.sub-wallet-btn:hover, .sub-wallet-btn:focus, .sub-wallet-btn:active {
   background-color: #004BFF;
 }
 
@@ -73,7 +73,21 @@ code {
 
 .ant-input {
   outline: none;
+
   &:focus {
     box-shadow: none;
   }
+}
+
+.ant-select {
+  outline: none;
+
+  .ant-select-selector {
+    outline: none;
+    box-shadow: none!important;
+  }
+}
+
+.ant-btn[disabled], .ant-btn[disabled]:active, .ant-btn[disabled]:focus, .ant-btn[disabled]:hover {
+  background-color: #5485fc;
 }

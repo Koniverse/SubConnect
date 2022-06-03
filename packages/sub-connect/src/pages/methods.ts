@@ -1,5 +1,6 @@
 // Copyright 2019-2022 @subwallet/sub-connect authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+// Some code of this file refer to https://github.com/MetaMask/test-dapp/blob/main/src/index.js
 
 import { RequestArguments } from '@metamask/providers/dist/BaseProvider';
 

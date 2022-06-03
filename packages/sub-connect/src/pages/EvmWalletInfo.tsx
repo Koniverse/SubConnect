@@ -1,18 +1,24 @@
 // Copyright 2019-2022 @subwallet/sub-connect authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+// Some code of this file refer to https://github.com/MetaMask/test-dapp/blob/main/src/index.js
+import { keccak256 } from '@ethersproject/keccak256';
 import { RequestArguments } from '@metamask/providers/dist/BaseProvider';
 import { Maybe } from '@metamask/providers/dist/utils';
 import { METHOD_MAP } from '@subwallet/sub-connect/pages/methods';
 import { windowReload } from '@subwallet/sub-connect/utils/window';
 import { EvmWallet } from '@subwallet/wallet-connect/types';
-import { Button, Input, message } from 'antd';
+import { Button, Input, message, Select } from 'antd';
+import { recoverPersonalSignature, recoverTypedSignatureLegacy } from 'eth-sig-util';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import Web3 from 'web3';
 import { AbstractProvider } from 'web3-core';
 
 import { WalletContext } from '../contexts';
 
+const { Option } = Select;
+
+// Json file is download from https://chainid.network/chains.json
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const chainList = require('./evmChains.json') as NetworkInfo[];
 
@@ -28,6 +34,18 @@ interface NetworkInfo {
   networkId: string,
   explorers: [{ 'name': string, 'url': string, 'standard': string }]
 }
+
+const SIGN_METHODS = {
+  ethSign: {
+    name: 'ETH Sign'
+  },
+  personalSign: {
+    name: 'Personal Sync'
+  },
+  signTypedData: {
+    name: 'Sign Typed Data'
+  }
+};
 
 require('./EvmWalletInfo.scss');
 
@@ -47,6 +65,12 @@ function EvmWalletInfo (): React.ReactElement {
   const [transactionToAddress, setTransactionToAddress] = useState('');
   const [transactionAmount, setTransactionAmount] = useState<number>(0);
   const [transactionLink, setTransactionLink] = useState<string | undefined>(undefined);
+
+  // signature
+  const [signMessage, setSignMessage] = useState('Hello Alice!');
+  const [signature, setSignature] = useState('');
+  const [signMethod, setSignMethod] = useState('personalSign');
+  const [signatureValidation, setSignatureValidation] = useState('');
 
   const makeRequest = useCallback(
     function <T> (args: RequestArguments, callback: (rs: Maybe<T>) => void): void {
@@ -147,6 +171,24 @@ function EvmWalletInfo (): React.ReactElement {
     []
   );
 
+  const _onChangeSignMessage = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSignMessage(e.target.value);
+      setSignature('');
+      setSignatureValidation('');
+    },
+    []
+  );
+
+  const _onChangeSignMethod = useCallback(
+    (value: string) => {
+      setSignMethod(value);
+      setSignature('');
+      setSignatureValidation('');
+    },
+    []
+  );
+
   const sendTransaction = useCallback(
     () => {
       console.log(transactionAmount);
@@ -169,6 +211,80 @@ function EvmWalletInfo (): React.ReactElement {
     [accounts, makeRequest, network?.explorers, network?.nativeCurrency.decimals, transactionAmount, transactionToAddress]
   );
 
+  const signData = useCallback(
+    () => {
+      // @ts-ignore
+      if (!SIGN_METHODS[signMethod]) {
+        return;
+      }
+
+      const from = accounts[0];
+      let message = signMessage;
+      const args = {} as RequestArguments;
+
+      if (signMethod === 'ethSign') {
+        message = keccak256(Buffer.from(signMessage, 'utf8'));
+        args.method = 'eth_sign';
+        args.params = [from, message];
+      } else if (signMethod === 'personalSign') {
+        message = `0x${Buffer.from(signMessage, 'utf8').toString('hex')}`;
+        args.method = 'personal_sign';
+        args.params = [message, from, 'Example password'];
+      } else if (signMethod === 'signTypedData') {
+        args.method = 'eth_signTypedData';
+        args.params = [
+          [{
+            type: 'string',
+            name: 'Message',
+            value: message
+          }],
+          from
+        ];
+      }
+
+      makeRequest<string>(args, (signature) => {
+        setSignature(signature as string);
+      });
+    },
+    [accounts, makeRequest, signMessage, signMethod]
+  );
+
+  const verifySignature = useCallback(
+    () => {
+      const from = accounts[0];
+      let recoveredAddress = '';
+      let mess = signMessage;
+
+      if (signMethod === 'ethSign') {
+        setSignatureValidation('OK');
+      } else if (signMethod === 'personalSign') {
+        mess = `0x${Buffer.from(signMessage, 'utf8').toString('hex')}`;
+        recoveredAddress = recoverPersonalSignature({
+          data: mess,
+          sig: signature
+        });
+      } else if (signMethod === 'signTypedData') {
+        recoveredAddress = recoverTypedSignatureLegacy({
+          data: [{
+            type: 'string',
+            name: 'Message',
+            value: mess
+          }],
+          sig: signature
+        });
+      }
+
+      setSignatureValidation(recoveredAddress);
+
+      if (recoveredAddress === from) {
+        void message.success('Verify Success!');
+      } else {
+        void message.error('Signed address is different from current address');
+      }
+    },
+    [accounts, signMessage, signMethod, signature]
+  );
+
   return <div className={'boxed-container'}>
     <div className={'evm-wallet-info-page'}>
       <div className='evm-wallet-info-page__section'>
@@ -182,7 +298,8 @@ function EvmWalletInfo (): React.ReactElement {
         <div className='evm-wallet-info-page__text'>Permissions</div>
         <div className='evm-wallet-info__button_group'>
           {generateRequestButton('Request Permissions', METHOD_MAP.requestPermissions)}
-          {generateRequestButton('Get Permissions', METHOD_MAP.getPermissions, console.warn)}</div>
+          {generateRequestButton('Get Permissions', METHOD_MAP.getPermissions, console.warn)}
+        </div>
       </div>
       <div className='evm-wallet-info-page__section'>
         <div className='evm-wallet-info-page__text'>Network Actions</div>
@@ -244,6 +361,62 @@ function EvmWalletInfo (): React.ReactElement {
             > here</a>
           </div>}
         </div>
+      </div>
+      <div className='evm-wallet-info-page__section'>
+        <div className='evm-wallet-info-page__text'>Signature</div>
+        <div className='evm-wallet-transaction_row'>
+          <span className='label'>Message</span>
+          <Input
+            className='code'
+            defaultValue={signMessage}
+            onChange={_onChangeSignMessage}
+            type='text'
+          />
+        </div>
+        <div className='evm-wallet-transaction_row'>
+          <span className='label'>Sign Method</span>
+          <Select
+            defaultValue={signMethod}
+            onChange={_onChangeSignMethod}
+          >
+            <Option value='ethSign'>ETH Sign</Option>
+            <Option value='personalSign'>Personal Sign</Option>
+            <Option value='signTypedData'>Sign Typed Data</Option>
+          </Select>
+        </div>
+        <div className='evm-wallet-transaction_row'>
+          <Button
+            className='sub-wallet-btn sub-wallet-btn-small-size max-w'
+            onClick={signData}
+          >Sign Data</Button>
+        </div>
+        <div className='evm-wallet-transaction_row'>
+          <span className='label'>Result</span>
+          <Input
+            className='code'
+            readOnly={true}
+            type='text'
+            value={signature}
+          />
+        </div>
+        {signMethod != 'ethSign' && <div>
+          <div className='evm-wallet-transaction_row'>
+            <Button
+              className='sub-wallet-btn sub-wallet-btn-small-size max-w'
+              disabled={signature === ''}
+              onClick={verifySignature}
+            >Verify Signature</Button>
+          </div>
+          <div className='evm-wallet-transaction_row'>
+            <span className='label'>Validate Result</span>
+            <Input
+              className='code'
+              readOnly={true}
+              type='text'
+              value={signatureValidation}
+            />
+          </div>
+        </div>}
       </div>
       <div className='evm-wallet-info-page__section'>
         <div className='evm-wallet-info-page__text'>Connect provider with web3.js</div>

@@ -21,10 +21,16 @@ function Layout (): React.ReactElement<null> {
     if (!walletContext.wallet) {
       navigate('/welcome');
     }
-  }, [navigate, walletContext.wallet]);
+
+    const isDark = theme === 'dark';
+
+    document.body.style.backgroundColor = isDark ? '#020412' : '#FFF';
+    document.body.className = isDark ? 'dark-theme' : 'light-theme';
+  }, [theme, navigate, walletContext.wallet]);
 
   const _onChangeTheme = useCallback(() => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
+    document.body.className = theme === 'dark' ? 'dark-theme' : 'light-theme';
   }, [setTheme, theme]);
 
   return (<div className={'main-layout '}>

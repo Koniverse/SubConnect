@@ -16,11 +16,34 @@
   background-color: #020412;
   color: #fff;
 
-
   .ant-input {
     background-color: #262C4A;
     border-color: rgba(128, 128, 128, 0.2);
     color: #ddd;
+  }
+
+}
+
+.dark-theme {
+  .ant-select .ant-select-selector, .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    background-color: #262C4A;
+    border-color: rgba(128, 128, 128, 0.2)!important;
+    color: #ddd;
+  }
+
+  .ant-select-dropdown {
+    background-color: #262C4A;
+    color: #fff;
+    border-color: rgba(128, 128, 128, 0.2);
+
+    .ant-select-item {
+      color: #fff;
+      background-color: #262C4A;
+
+      &.ant-select-item-option-selected, &:hover {
+        background-color: rgba(128,128,128,0.2);
+      }
+    }
   }
 }
 

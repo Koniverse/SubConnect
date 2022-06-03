@@ -9,7 +9,6 @@ import { HashRouter, Route, Routes } from 'react-router-dom';
 
 import Layout from './components/Layout';
 import Welcome from './components/Welcome';
-import { useLocalStorage } from './hooks/useLocalStorage/useLocalStorage';
 import WalletInfo from './pages/WalletInfo';
 
 require('./App.scss');
@@ -18,10 +17,6 @@ require('./App.scss');
 doAddWallet();
 
 export function App () {
-  const [subWalletTheme] = useLocalStorage('sub-wallet-theme', 'dark');
-
-  document.body.style.backgroundColor = subWalletTheme === 'dark' ? '#020412' : '#FFF';
-
   return (
     <WalletContextProvider>
       <HashRouter>
