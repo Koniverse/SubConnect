@@ -13,6 +13,9 @@ export class BaseEvmWallet implements EvmWallet {
   title: string;
   isSetGlobalString: string;
   initEvent?: string;
+  _isReady = false;
+  _handledReady = false;
+  isReady: Promise<MetaMaskInpageProvider | undefined>;
 
   _extension: MetaMaskInpageProvider | undefined;
 
@@ -23,11 +26,13 @@ export class BaseEvmWallet implements EvmWallet {
     this.installUrl = installUrl;
     this.isSetGlobalString = isSetGlobalString;
     this.initEvent = initEvent;
-
-    this.fullLookupProvider()
+    this.isReady = this.waitReady()
       .then((extension) => {
         this._extension = extension;
-      }).catch(console.log);
+        this._isReady = true;
+
+        return extension;
+      });
   }
 
   private lookupProvider () {
@@ -36,41 +41,40 @@ export class BaseEvmWallet implements EvmWallet {
     return ((window && window[this.extensionName]) || (window?.ethereum && window?.ethereum[this.isSetGlobalString])) as MetaMaskInpageProvider;
   }
 
-  private async fullLookupProvider (timeout = 3000): Promise<MetaMaskInpageProvider | undefined> {
-    return new Promise((resolve, reject) => {
-      let handled = false;
+  private async waitReady (timeout = 3000): Promise<MetaMaskInpageProvider | undefined> {
+    if (this._isReady) {
+      return Promise.resolve(this.extension);
+    }
+
+    return new Promise((resolve) => {
       let currentProvider = this.lookupProvider();
       const initEvent = this.initEvent;
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      const self = this;
 
       if (currentProvider) {
+        this._handledReady = true;
         resolve(currentProvider);
       } else if (initEvent) {
-        window.addEventListener(initEvent, () => {
+        const handleProvider = () => {
+          if (this._handledReady) {
+            return;
+          }
+
+          this._handledReady = true;
+
+          window.removeEventListener(initEvent, handleProvider);
+
+          if (!currentProvider) {
+            console.warn(`Not found provider of ${this.title}(${this.extensionName})`);
+          }
+
           currentProvider = this.lookupProvider();
-          handleProvider();
-        }, { once: true });
+          resolve(currentProvider);
+        };
+
+        window.addEventListener(initEvent, handleProvider, { once: true });
         setTimeout(() => {
           handleProvider();
         }, timeout);
-      }
-
-      function handleProvider () {
-        if (handled) {
-          return;
-        }
-
-        handled = true;
-
-        // @ts-ignore
-        window.removeEventListener(initEvent, handleProvider);
-
-        if (!currentProvider) {
-          console.warn(`Not found provider of ${self.title}(${self.extensionName})`);
-        }
-
-        resolve(currentProvider);
       }
     });
   }
@@ -87,23 +91,17 @@ export class BaseEvmWallet implements EvmWallet {
     return !!this.extension;
   }
 
-  enable (): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      this.request<string[]>({ method: 'eth_requestAccounts' })
-        .then((accounts) => {
-          if (accounts && accounts.length > 0) {
-            resolve(true);
-          }
+  async enable (): Promise<boolean> {
+    await this.isReady;
+    const accounts = await this.request<string[]>({ method: 'eth_requestAccounts' });
 
-          resolve(false);
-        }).catch((e) => {
-          reject(e);
-        });
-    });
+    return !!(accounts && accounts.length > 0);
   }
 
-  request<T> (args: RequestArguments): Promise<Maybe<T>> {
-    return this.extension?.request(args);
+  async request<T> (args: RequestArguments): Promise<Maybe<T>> {
+    await this.isReady;
+
+    return await this.extension.request<T>(args);
   }
 
   // addProvider (provider: any): void {

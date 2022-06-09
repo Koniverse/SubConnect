@@ -62,8 +62,9 @@ export interface EvmWalletInfo extends WalletInfo {
 }
 
 export interface EvmWallet extends EvmWalletInfo, EvmWalletMethods {
-  installed: boolean | undefined;
+  installed: boolean;
   extension: MetaMaskInpageProvider | undefined;
+  isReady: Promise<MetaMaskInpageProvider | undefined>;
 }
 
 // EVM request method callback event params

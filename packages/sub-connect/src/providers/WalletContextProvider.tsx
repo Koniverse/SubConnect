@@ -99,12 +99,9 @@ export function WalletContextProvider ({ children }: Props) {
       } else {
         const evmWallet = getEvmWalletBySource(walletKey);
 
-        if (evmWallet && evmWallet?.installed) {
-          setTimeout(() => {
-          // eslint-disable-next-line no-void
-            void afterSelectEvmWallet(evmWallet);
-          }, 150);
-        }
+        evmWallet && evmWallet?.isReady.then(() => {
+          afterSelectEvmWallet(evmWallet).catch(console.error);
+        });
       }
     },
     [afterSelectEvmWallet, afterSelectWallet, walletKey, walletType]
