@@ -95,8 +95,9 @@ function EvmWalletInfo (): React.ReactElement {
   );
 
   const generateRequestButton = useCallback(
-    (label: string, args: RequestArguments, callback?: (rs: Maybe<unknown>) => void) => (<Button
+    (label: string, args: RequestArguments, callback?: (rs: Maybe<unknown>) => void, disabled?: boolean) => (<Button
       className='sub-wallet-btn sub-wallet-btn-small-size'
+      disabled={disabled}
       key={label}
       // eslint-disable-next-line react/jsx-no-bind
       onClick={() => {
@@ -324,16 +325,16 @@ function EvmWalletInfo (): React.ReactElement {
         <div className='evm-wallet-info-page__text'>Network Actions</div>
         <div className='evm-wallet-info__button_group'>
           <div className='evm-wallet-info__button_row'>
-            {generateRequestButton('Add Moonbeam Network', METHOD_MAP.addMoonbeamNetwork)}
-            {generateRequestButton('Switch to Moonbeam', METHOD_MAP.switchToMoonbeamNetwork)}
+            {generateRequestButton('Add Moonbeam Network', METHOD_MAP.addMoonbeamNetwork, console.log, chainId === 1284)}
+            {generateRequestButton('Switch to Moonbeam', METHOD_MAP.switchToMoonbeamNetwork, console.log, chainId === 1284)}
           </div>
           <div className='evm-wallet-info__button_row'>
-            {generateRequestButton('Add Moonriver Network', METHOD_MAP.addMoonriverNetwork)}
-            {generateRequestButton('Switch to Moonriver', METHOD_MAP.switchToMoonriverNetwork)}
+            {generateRequestButton('Add Moonriver Network', METHOD_MAP.addMoonriverNetwork, console.log, chainId === 1285)}
+            {generateRequestButton('Switch to Moonriver', METHOD_MAP.switchToMoonriverNetwork, console.log, chainId === 1285)}
           </div>
           <div className='evm-wallet-info__button_row'>
-            {generateRequestButton('Add Moonbase Network', METHOD_MAP.addMoonbaseAlphaNetwork)}
-            {generateRequestButton('Switch to Moonbase', METHOD_MAP.switchToMoonbaseAlphaNetwork)}
+            {generateRequestButton('Add Moonbase Network', METHOD_MAP.addMoonbaseAlphaNetwork, console.log, chainId === 1287)}
+            {generateRequestButton('Switch to Moonbase', METHOD_MAP.switchToMoonbaseAlphaNetwork, console.log, chainId === 1287)}
           </div>
         </div>
       </div>
