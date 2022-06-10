@@ -52,6 +52,7 @@ function EvmWalletInfo (): React.ReactElement {
   const wallet = useContext(WalletContext).evmWallet;
 
   const [accounts, setAccounts] = useState<string[]>([]);
+  const [availableAccounts, setAvailableAccounts] = useState<string[]>([]);
   const [chainId, setChainId] = useState<number | undefined>(undefined);
   const [network, setNetwork] = useState<NetworkInfo | undefined>(undefined);
   const [balance, setBalance] = useState<number | undefined>(undefined);
@@ -112,6 +113,8 @@ function EvmWalletInfo (): React.ReactElement {
       if (!wallet) {
         return;
       }
+
+      await wallet.isReady;
 
       const w3 = wallet?.extension && new Web3(wallet.extension as AbstractProvider);
 
@@ -182,6 +185,17 @@ function EvmWalletInfo (): React.ReactElement {
       setSignMethod(value);
       setSignature('');
       setSignatureValidation('');
+    },
+    []
+  );
+
+  const handlePermissionsRs = useCallback(
+    (response: Maybe<unknown>) => {
+      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      const accounts = response[0]?.caveats[0].value as string[] || [];
+
+      setAvailableAccounts(accounts);
     },
     []
   );
@@ -290,15 +304,21 @@ function EvmWalletInfo (): React.ReactElement {
         <div className='evm-wallet-info-page__text'>Basic Information</div>
         <div>Network: <span className='account-item__content'>{network?.name} ({chainId})</span></div>
         <div>Status: <span className='account-item__content'>{wallet?.extension?.isConnected() ? 'Connected' : 'Disconnected'}</span></div>
-        <div>Current Address: <span className='account-item__content'>{accounts.join(', ')}</span></div>
+        <div>Current Address: <span className='account-item__content font-mono'>{accounts.join(', ')}</span></div>
         <div>Balance: <span className='account-item__content'>{balance} {network?.nativeCurrency.symbol}</span></div>
       </div>
       <div className='evm-wallet-info-page__section'>
         <div className='evm-wallet-info-page__text'>Permissions</div>
         <div className='evm-wallet-info__button_group'>
-          {generateRequestButton('Request Permissions', METHOD_MAP.requestPermissions)}
-          {generateRequestButton('Get Permissions', METHOD_MAP.getPermissions, console.warn)}
+          {generateRequestButton('Get Permissions', METHOD_MAP.getPermissions, handlePermissionsRs)}
+          {generateRequestButton('Request Permissions', METHOD_MAP.requestPermissions, handlePermissionsRs)}
         </div>
+        {availableAccounts.length > 0 && (
+          <div>
+            <div>Available Accounts:</div>
+            <div><span className='account-item__content font-mono'>{availableAccounts.join('\n')}</span></div>
+          </div>
+        )}
       </div>
       <div className='evm-wallet-info-page__section'>
         <div className='evm-wallet-info-page__text'>Network Actions</div>

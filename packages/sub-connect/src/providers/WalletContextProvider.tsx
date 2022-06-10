@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { useLocalStorage } from '@subwallet/sub-connect/hooks/useLocalStorage/useLocalStorage';
+import { windowReload } from '@subwallet/sub-connect/utils/window';
 import { getWalletBySource } from '@subwallet/wallet-connect/dotsama/wallets';
 import { getEvmWalletBySource } from '@subwallet/wallet-connect/evm/evmWallets';
 import { EvmWallet, Wallet, WalletAccount } from '@subwallet/wallet-connect/types';
@@ -55,6 +56,8 @@ export function WalletContextProvider ({ children }: Props) {
       setCurrentWallet(currentWallet);
 
       setWalletKey(wallet.extensionName);
+
+      windowReload();
     },
     [afterSelectEvmWallet, currentWallet, setWalletKey]
   );

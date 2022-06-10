@@ -3534,6 +3534,7 @@ __metadata:
     "@polkadot/types": ^8.5.1
     "@polkadot/util": ^9.2.1
     "@types/web3-provider-engine": ^14.0.1
+    web3-core: ^1.7.3
   languageName: unknown
   linkType: soft
 
@@ -20511,7 +20512,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"web3-core@npm:1.7.3":
+"web3-core@npm:1.7.3, web3-core@npm:^1.7.3":
   version: 1.7.3
   resolution: "web3-core@npm:1.7.3"
   dependencies:
