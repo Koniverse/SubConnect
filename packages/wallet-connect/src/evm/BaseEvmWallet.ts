@@ -63,11 +63,12 @@ export class BaseEvmWallet implements EvmWallet {
 
           window.removeEventListener(initEvent, handleProvider);
 
+          currentProvider = this.lookupProvider();
+
           if (!currentProvider) {
             console.warn(`Not found provider of ${this.title}(${this.extensionName})`);
           }
 
-          currentProvider = this.lookupProvider();
           resolve(currentProvider);
         };
 

@@ -8,7 +8,8 @@ import { Maybe } from '@metamask/providers/dist/utils';
 import { METHOD_MAP } from '@subwallet/sub-connect/pages/methods';
 import { windowReload } from '@subwallet/sub-connect/utils/window';
 import { Button, Input, message, Select } from 'antd';
-import { recoverPersonalSignature, recoverTypedSignatureLegacy } from 'eth-sig-util';
+// eslint-disable-next-line camelcase
+import { recoverPersonalSignature, recoverTypedSignature, recoverTypedSignature_v4, recoverTypedSignatureLegacy, TypedData, TypedMessage } from 'eth-sig-util';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import Web3 from 'web3';
 import { AbstractProvider } from 'web3-core';
@@ -36,13 +37,128 @@ interface NetworkInfo {
 
 const SIGN_METHODS = {
   ethSign: {
-    name: 'ETH Sign'
+    name: 'ETH Sign',
+    method: 'eth_sign',
+    getInput: (message: string): string => {
+      return keccak256(Buffer.from(message, 'utf8'));
+    }
   },
   personalSign: {
-    name: 'Personal Sync'
+    name: 'Personal Sync',
+    method: 'personal_sign',
+    getInput: (message: string): string => {
+      return `0x${Buffer.from(message, 'utf8').toString('hex')}`;
+    }
   },
   signTypedData: {
-    name: 'Sign Typed Data'
+    name: 'Sign Typed Data',
+    method: 'eth_signTypedData',
+    getInput: (message: string): TypedData => {
+      return [{
+        type: 'string',
+        name: 'Message',
+        value: message
+      }];
+    }
+  },
+  signTypedDatav3: {
+    name: 'Sign Typed Data v3',
+    method: 'eth_signTypedData_v3',
+    getInput: (message: string, chainId: number, from: string): TypedMessage<any> => {
+      return {
+        types: {
+          EIP712Domain: [
+            { name: 'name', type: 'string' },
+            { name: 'version', type: 'string' },
+            { name: 'chainId', type: 'uint256' },
+            { name: 'verifyingContract', type: 'address' }
+          ],
+          Person: [
+            { name: 'name', type: 'string' },
+            { name: 'wallet', type: 'address' }
+          ],
+          Mail: [
+            { name: 'from', type: 'Person' },
+            { name: 'to', type: 'Person' },
+            { name: 'contents', type: 'string' }
+          ]
+        },
+        primaryType: 'Mail',
+        domain: {
+          name: 'Ether Mail',
+          version: '1',
+          chainId,
+          verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC'
+        },
+        message: {
+          from: {
+            name: 'John Doe',
+            wallet: from
+          },
+          to: {
+            name: 'Alice',
+            wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB'
+          },
+          contents: message
+        }
+      };
+    }
+  },
+  signTypedDatav4: {
+    name: 'Sign Typed Data v4',
+    method: 'eth_signTypedData_v4',
+    getInput: (message: string, chainId: number, from: string): TypedMessage<any> => {
+      return {
+        domain: {
+          chainId,
+          name: 'Ether Mail',
+          verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+          version: '1'
+        },
+        message: {
+          contents: message,
+          from: {
+            name: 'Cow',
+            wallets: [
+              from,
+              '0xDeaDbeefdEAdbeefdEadbEEFdeadbeEFdEaDbeeF'
+            ]
+          },
+          to: [
+            {
+              name: 'Alice',
+              wallets: [
+                '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB',
+                '0xB0BdaBea57B0BDABeA57b0bdABEA57b0BDabEa57',
+                '0xB0B0b0b0b0b0B000000000000000000000000000'
+              ]
+            }
+          ]
+        },
+        primaryType: 'Mail',
+        types: {
+          EIP712Domain: [
+            { name: 'name', type: 'string' },
+            { name: 'version', type: 'string' },
+            { name: 'chainId', type: 'uint256' },
+            { name: 'verifyingContract', type: 'address' }
+          ],
+          Group: [
+            { name: 'name', type: 'string' },
+            { name: 'members', type: 'Person[]' }
+          ],
+          Mail: [
+            { name: 'from', type: 'Person' },
+            { name: 'to', type: 'Person[]' },
+            { name: 'contents', type: 'string' }
+          ],
+          Person: [
+            { name: 'name', type: 'string' },
+            { name: 'wallets', type: 'address[]' }
+          ]
+        }
+      };
+    }
   }
 };
 
@@ -215,9 +331,13 @@ function EvmWalletInfo (): React.ReactElement {
           maxPriorityFeePerGas: '0x3b9aca00'
         }]
       }, (transactionHash) => {
-        const explorer = network?.explorers[0]?.url;
+        if (network?.explorers && network?.explorers.length) {
+          const explorer = network?.explorers[0]?.url;
 
-        setTransactionLink(explorer && (explorer + '/tx/' + (transactionHash as string)));
+          setTransactionLink(explorer && (explorer + '/tx/' + (transactionHash as string)));
+        } else {
+          setTransactionLink(undefined);
+        }
       });
     },
     [accounts, makeRequest, network?.explorers, network?.nativeCurrency.decimals, transactionAmount, transactionToAddress]
@@ -231,64 +351,64 @@ function EvmWalletInfo (): React.ReactElement {
       }
 
       const from = accounts[0];
-      let message = signMessage;
       const args = {} as RequestArguments;
 
       if (signMethod === 'ethSign') {
-        message = keccak256(Buffer.from(signMessage, 'utf8'));
-        args.method = 'eth_sign';
-        args.params = [from, message];
+        args.method = SIGN_METHODS.ethSign.method;
+        args.params = [from, SIGN_METHODS.ethSign.getInput(signMessage)];
       } else if (signMethod === 'personalSign') {
-        message = `0x${Buffer.from(signMessage, 'utf8').toString('hex')}`;
-        args.method = 'personal_sign';
-        args.params = [message, from, 'Example password'];
+        args.method = SIGN_METHODS.personalSign.method;
+        args.params = [SIGN_METHODS.personalSign.getInput(signMessage), from];
       } else if (signMethod === 'signTypedData') {
-        args.method = 'eth_signTypedData';
-        args.params = [
-          [{
-            type: 'string',
-            name: 'Message',
-            value: message
-          }],
-          from
-        ];
+        args.method = SIGN_METHODS.signTypedData.method;
+        args.params = [SIGN_METHODS.signTypedData.getInput(signMessage), from];
+      } else if (signMethod === 'signTypedDatav3') {
+        args.method = SIGN_METHODS.signTypedDatav3.method;
+        args.params = [from, JSON.stringify(SIGN_METHODS.signTypedDatav3.getInput(signMessage, chainId || 0, from))];
+      } else if (signMethod === 'signTypedDatav4') {
+        args.method = SIGN_METHODS.signTypedDatav4.method;
+        args.params = [from, JSON.stringify(SIGN_METHODS.signTypedDatav4.getInput(signMessage, chainId || 0, from))];
       }
 
       makeRequest<string>(args, (signature) => {
         setSignature(signature as string);
       });
     },
-    [accounts, makeRequest, signMessage, signMethod]
+    [accounts, chainId, makeRequest, signMessage, signMethod]
   );
 
   const verifySignature = useCallback(
     () => {
       const from = accounts[0];
       let recoveredAddress = '';
-      let mess = signMessage;
 
       if (signMethod === 'ethSign') {
         setSignatureValidation('OK');
       } else if (signMethod === 'personalSign') {
-        mess = `0x${Buffer.from(signMessage, 'utf8').toString('hex')}`;
         recoveredAddress = recoverPersonalSignature({
-          data: mess,
+          data: SIGN_METHODS.personalSign.getInput(signMessage),
           sig: signature
         });
       } else if (signMethod === 'signTypedData') {
         recoveredAddress = recoverTypedSignatureLegacy({
-          data: [{
-            type: 'string',
-            name: 'Message',
-            value: mess
-          }],
+          data: SIGN_METHODS.signTypedData.getInput(signMessage),
+          sig: signature
+        });
+      } else if (signMethod === 'signTypedDatav3') {
+        recoveredAddress = recoverTypedSignature({
+          data: SIGN_METHODS.signTypedDatav3.getInput(signMessage, chainId || 0, from),
+          sig: signature
+        });
+      } else if (signMethod === 'signTypedDatav4') {
+        recoveredAddress = recoverTypedSignature_v4({
+          data: SIGN_METHODS.signTypedDatav4.getInput(signMessage, chainId || 0, from),
           sig: signature
         });
       }
 
       setSignatureValidation(recoveredAddress);
 
-      if (recoveredAddress === from) {
+      if (recoveredAddress.toLowerCase() === from.toLowerCase()) {
         // eslint-disable-next-line no-void
         void message.success('Verify Success!');
       } else {
@@ -296,7 +416,7 @@ function EvmWalletInfo (): React.ReactElement {
         void message.error('Signed address is different from current address');
       }
     },
-    [accounts, signMessage, signMethod, signature]
+    [accounts, chainId, signMessage, signMethod, signature]
   );
 
   return <div className={'boxed-container'}>
@@ -399,9 +519,10 @@ function EvmWalletInfo (): React.ReactElement {
             defaultValue={signMethod}
             onChange={_onChangeSignMethod}
           >
-            <Option value='ethSign'>ETH Sign</Option>
-            <Option value='personalSign'>Personal Sign</Option>
-            <Option value='signTypedData'>Sign Typed Data</Option>
+            {Object.entries(SIGN_METHODS).map(([k, v]) => (<Option
+              key={k}
+              value={k}
+            >{v.name}</Option>))}
           </Select>
         </div>
         <div className='evm-wallet-transaction_row'>
