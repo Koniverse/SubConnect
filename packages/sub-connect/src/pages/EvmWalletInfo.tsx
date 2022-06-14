@@ -319,19 +319,17 @@ function EvmWalletInfo (): React.ReactElement {
 
   const sendTransaction = useCallback(
     () => {
-      console.log(transactionAmount);
       makeRequest({
         method: 'eth_sendTransaction',
         params: [{
           from: accounts[0],
           to: transactionToAddress,
-          value: (transactionAmount * (10 ** (network?.nativeCurrency.decimals || 18))).toString(16),
-          gasLimit: '0x5028',
+          value: '0x' + (transactionAmount * (10 ** (network?.nativeCurrency.decimals || 18))).toString(16),
           maxFeePerGas: '0x2540be400',
           maxPriorityFeePerGas: '0x3b9aca00'
         }]
       }, (transactionHash) => {
-        if (network?.explorers && network?.explorers.length) {
+        if (network?.explorers && network?.explorers.length && transactionHash) {
           const explorer = network?.explorers[0]?.url;
 
           setTransactionLink(explorer && (explorer + '/tx/' + (transactionHash as string)));

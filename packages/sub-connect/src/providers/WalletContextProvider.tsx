@@ -93,12 +93,12 @@ export function WalletContextProvider ({ children }: Props) {
       if (walletType === 'substrate') {
         const wallet = getWalletBySource(walletKey);
 
-        if (wallet && wallet?.installed) {
-          setTimeout(() => {
-          // eslint-disable-next-line no-void
+        setTimeout(() => {
+          if (wallet && wallet?.installed) {
+            // eslint-disable-next-line no-void
             void afterSelectWallet(wallet);
-          }, 150);
-        }
+          }
+        }, 150);
       } else {
         const evmWallet = getEvmWalletBySource(walletKey);
 
