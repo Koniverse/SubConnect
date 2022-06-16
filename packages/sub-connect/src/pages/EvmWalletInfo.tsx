@@ -198,13 +198,20 @@ function EvmWalletInfo (): React.ReactElement {
   );
 
   const getBalance = useCallback(
-    (address: string, network: NetworkInfo) => {
-      makeRequest<string>({ method: 'eth_getBalance', params: [address, 'latest'] }, (balance) => {
-        if (typeof balance === 'string' && balance.startsWith('0x')) {
-          const balVal = network && parseInt(balance, 16) / (10 ** network.nativeCurrency.decimals);
+    (addresses: string[], network: NetworkInfo) => {
+      let total = 0;
 
-          setBalance(balVal);
-        }
+      addresses.forEach((address: string) => {
+        makeRequest<string>({ method: 'eth_getBalance', params: [address, 'latest'] }, (balance) => {
+          if (typeof balance === 'string' && balance.startsWith('0x')) {
+            const balVal = network && parseInt(balance, 16);
+
+            if (balVal) {
+              total += balVal;
+              setBalance(total / (10 ** network.nativeCurrency.decimals));
+            }
+          }
+        });
       });
     },
     [makeRequest]
@@ -249,7 +256,11 @@ function EvmWalletInfo (): React.ReactElement {
       _accounts && setAccounts(_accounts as string[]);
 
       if (_accounts && _accounts[0]) {
-        getBalance(_accounts[0], chain as NetworkInfo);
+        getBalance(_accounts as string[], chain as NetworkInfo);
+
+        setInterval(() => {
+          getBalance(_accounts as string[], chain as NetworkInfo);
+        }, 30000);
 
         w3?.eth.subscribe('newBlockHeaders')
           .on('connected', function (subscriptionId) {
@@ -443,16 +454,16 @@ function EvmWalletInfo (): React.ReactElement {
         <div className='evm-wallet-info-page__text'>Network Actions</div>
         <div className='evm-wallet-info__button_group'>
           <div className='evm-wallet-info__button_row'>
-            {generateRequestButton('Add Moonbeam Network', METHOD_MAP.addMoonbeamNetwork, console.log, chainId === 1284)}
-            {generateRequestButton('Switch to Moonbeam', METHOD_MAP.switchToMoonbeamNetwork, console.log, chainId === 1284)}
+            {generateRequestButton('Add Moonbeam Network', METHOD_MAP.addMoonbeamNetwork, undefined, chainId === 1284)}
+            {generateRequestButton('Switch to Moonbeam', METHOD_MAP.switchToMoonbeamNetwork, undefined, chainId === 1284)}
           </div>
           <div className='evm-wallet-info__button_row'>
-            {generateRequestButton('Add Moonriver Network', METHOD_MAP.addMoonriverNetwork, console.log, chainId === 1285)}
-            {generateRequestButton('Switch to Moonriver', METHOD_MAP.switchToMoonriverNetwork, console.log, chainId === 1285)}
+            {generateRequestButton('Add Moonriver Network', METHOD_MAP.addMoonriverNetwork, undefined, chainId === 1285)}
+            {generateRequestButton('Switch to Moonriver', METHOD_MAP.switchToMoonriverNetwork, undefined, chainId === 1285)}
           </div>
           <div className='evm-wallet-info__button_row'>
-            {generateRequestButton('Add Moonbase Network', METHOD_MAP.addMoonbaseAlphaNetwork, console.log, chainId === 1287)}
-            {generateRequestButton('Switch to Moonbase', METHOD_MAP.switchToMoonbaseAlphaNetwork, console.log, chainId === 1287)}
+            {generateRequestButton('Add Moonbase Network', METHOD_MAP.addMoonbaseAlphaNetwork, undefined, chainId === 1287)}
+            {generateRequestButton('Switch to Moonbase', METHOD_MAP.switchToMoonbaseAlphaNetwork, undefined, chainId === 1287)}
           </div>
         </div>
       </div>
