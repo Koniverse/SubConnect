@@ -171,7 +171,8 @@ function EvmWalletInfo (): React.ReactElement {
   const [availableAccounts, setAvailableAccounts] = useState<string[]>([]);
   const [chainId, setChainId] = useState<number | undefined>(undefined);
   const [network, setNetwork] = useState<NetworkInfo | undefined>(undefined);
-  const [balance, setBalance] = useState<number | undefined>(undefined);
+  const [balance, setBalance] = useState<number | undefined>(0);
+  const [warningNetwork, setWarningNetwork] = useState<string | undefined>(undefined);
 
   const [lastestBlock, setLastestBlock] = useState<number | undefined>(undefined);
 
@@ -187,10 +188,11 @@ function EvmWalletInfo (): React.ReactElement {
   const [signatureValidation, setSignatureValidation] = useState('');
 
   const makeRequest = useCallback(
-    function <T> (args: RequestArguments, callback: (rs: Maybe<T>) => void): void {
+    function <T> (args: RequestArguments, callback: (rs: Maybe<T>) => void, errorCallback?: (e: Error) => void): void {
       wallet?.request<T>(args)
         .then(callback)
         .catch(async (e: Error) => {
+          errorCallback && errorCallback(e);
           await message.error(e.message);
         });
     },
@@ -243,33 +245,40 @@ function EvmWalletInfo (): React.ReactElement {
       const w3 = wallet?.extension && new Web3(wallet.extension as AbstractProvider);
 
       const _chainId = await wallet?.request<string>({ method: 'eth_chainId' });
-      const cid = parseInt(_chainId as string, 16);
 
-      setChainId(cid);
-      // eslint-disable-next-line eqeqeq
-      const chain = chainList.find((network) => network.chainId == String(cid));
+      if (_chainId) {
+        const cid = parseInt(_chainId, 16);
 
-      setNetwork(chain);
+        setChainId(cid);
+        // eslint-disable-next-line eqeqeq
+        const chain = chainList.find((network) => network.chainId == String(cid));
 
-      const _accounts = await wallet?.request<string[]>({ method: 'eth_accounts' });
+        setNetwork(chain);
 
-      _accounts && setAccounts(_accounts as string[]);
+        const _accounts = await wallet?.request<string[]>({ method: 'eth_accounts' });
 
-      if (_accounts && _accounts[0]) {
-        getBalance(_accounts as string[], chain as NetworkInfo);
+        _accounts && setAccounts(_accounts as string[]);
 
-        setInterval(() => {
+        if (_accounts && _accounts[0]) {
           getBalance(_accounts as string[], chain as NetworkInfo);
-        }, 30000);
 
-        w3?.eth.subscribe('newBlockHeaders')
-          .on('connected', function (subscriptionId) {
-            console.log('Subscribe network with id ' + subscriptionId);
-          })
-          .on('data', function (blockHeader) {
-            setLastestBlock(blockHeader.number);
-          })
-          .on('error', console.error);
+          setInterval(() => {
+            getBalance(_accounts as string[], chain as NetworkInfo);
+          }, 30000);
+
+          w3?.eth.subscribe('newBlockHeaders')
+            .on('connected', function (subscriptionId) {
+              console.log('Subscribe network with id ' + subscriptionId);
+            })
+            .on('data', function (blockHeader) {
+              setLastestBlock(blockHeader.number);
+            })
+            .on('error', console.error);
+        }
+      } else {
+        makeRequest(METHOD_MAP.addMoonbaseAlphaNetwork, windowReload, (e) => {
+          setWarningNetwork('Auto switch network request is rejected.\nPlease select at least one button below to switch manually');
+        });
       }
 
       wallet?.extension?.on('chainChanged', () => {
@@ -283,7 +292,7 @@ function EvmWalletInfo (): React.ReactElement {
 
     init().catch(console.error);
   }
-  , [getBalance, wallet]);
+  , [getBalance, makeRequest, wallet]);
 
   const _onChangeTransactionToAddress = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -432,7 +441,7 @@ function EvmWalletInfo (): React.ReactElement {
     <div className={'evm-wallet-info-page'}>
       <div className='evm-wallet-info-page__section'>
         <div className='evm-wallet-info-page__text'>Basic Information</div>
-        <div>Network: <span className='account-item__content'>{network?.name} ({chainId})</span></div>
+        <div>Network: {network && <span className='account-item__content'>{network?.name} ({chainId})</span>}</div>
         <div>Status: <span className='account-item__content'>{wallet?.extension?.isConnected() ? 'Connected' : 'Disconnected'}</span></div>
         <div>Current Address: <span className='account-item__content font-mono'>{accounts.join(', ')}</span></div>
         <div>Balance: <span className='account-item__content'>{balance} {network?.nativeCurrency.symbol}</span></div>
@@ -452,6 +461,7 @@ function EvmWalletInfo (): React.ReactElement {
       </div>
       <div className='evm-wallet-info-page__section'>
         <div className='evm-wallet-info-page__text'>Network Actions</div>
+        {warningNetwork && <div className='warning-text'>{warningNetwork}</div>}
         <div className='evm-wallet-info__button_group'>
           <div className='evm-wallet-info__button_row'>
             {generateRequestButton('Add Moonbeam Network', METHOD_MAP.addMoonbeamNetwork, undefined, chainId === 1284)}
@@ -464,6 +474,14 @@ function EvmWalletInfo (): React.ReactElement {
           <div className='evm-wallet-info__button_row'>
             {generateRequestButton('Add Moonbase Network', METHOD_MAP.addMoonbaseAlphaNetwork, undefined, chainId === 1287)}
             {generateRequestButton('Switch to Moonbase', METHOD_MAP.switchToMoonbaseAlphaNetwork, undefined, chainId === 1287)}
+          </div>
+          <div className='evm-wallet-info__button_row'>
+            {generateRequestButton('Add Astar Network', METHOD_MAP.addAstarNetwork, undefined, chainId === 592)}
+            {generateRequestButton('Switch to Astar', METHOD_MAP.switchToAstarNetwork, undefined, chainId === 592)}
+          </div>
+          <div className='evm-wallet-info__button_row'>
+            {generateRequestButton('Add Shiden Network', METHOD_MAP.addShidenNetwork, undefined, chainId === 336)}
+            {generateRequestButton('Switch to Shiden', METHOD_MAP.switchToShidenNetwork, undefined, chainId === 336)}
           </div>
         </div>
       </div>

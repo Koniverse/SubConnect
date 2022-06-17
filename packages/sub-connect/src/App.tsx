@@ -1,7 +1,6 @@
 // Copyright 2019-2022 @subwallet/sub-connect authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { doAddWallet } from '@subwallet/sub-connect/new-wallet-example/newWalletExample';
 import EvmWalletInfo from '@subwallet/sub-connect/pages/EvmWalletInfo';
 import { WalletContextProvider } from '@subwallet/sub-connect/providers/WalletContextProvider';
 import React from 'react';
@@ -14,7 +13,7 @@ import WalletInfo from './pages/WalletInfo';
 require('./App.scss');
 
 // Add new example wallet
-doAddWallet();
+// doAddWallet();
 
 export function App () {
   return (

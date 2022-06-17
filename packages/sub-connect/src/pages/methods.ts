@@ -65,23 +65,63 @@ export const METHOD_MAP: Record<string, RequestArguments> = {
       }
     ]
   },
-  addBinanceNetwork: {
+  addAstarNetwork: {
     method: 'wallet_addEthereumChain',
     params: [
       {
-        chainId: '0x38',
-        rpcUrls: ['https://bsc-dataseed1.binance.org', 'https://bsc-dataseed2.binance.org', 'https://bsc-dataseed3.binance.org', 'https://bsc-dataseed4.binance.org', 'https://bsc-dataseed1.defibit.io', 'https://bsc-dataseed2.defibit.io', 'https://bsc-dataseed3.defibit.io', 'https://bsc-dataseed4.defibit.io', 'https://bsc-dataseed1.ninicoin.io', 'https://bsc-dataseed2.ninicoin.io', 'https://bsc-dataseed3.ninicoin.io', 'https://bsc-dataseed4.ninicoin.io', 'wss://bsc-ws-node.nariox.org'],
-        chainName: 'Binance Smart Chain Mainnet',
-        nativeCurrency: { name: 'Binance Chain Native Token', symbol: 'BNB', decimals: 18 },
-        blockExplorerUrls: ['https://bscscan.com']
+        chainId: '0x250',
+        rpcUrls: ['https://evm.shibuya.astar.network'],
+        chainName: 'Astar',
+        nativeCurrency: { name: 'ASTR', decimals: 18, symbol: 'ASTR' },
+        blockExplorerUrls: ['https://blockscout.com/astar']
       }
     ]
   },
-  switchToBinanceNetwork: {
+  switchToAstarNetwork: {
     method: 'wallet_switchEthereumChain',
     params: [
       {
-        chainId: '0x38'
+        chainId: '0x250' // 592
+      }
+    ]
+  },
+  addShidenNetwork: {
+    method: 'wallet_addEthereumChain',
+    params: [
+      {
+        chainId: '0x150', // 336
+        rpcUrls: ['https://evm.shibuya.astar.network'],
+        chainName: 'Shiden',
+        nativeCurrency: { name: 'SDN', decimals: 18, symbol: 'SDN' },
+        blockExplorerUrls: ['https://blockscout.com/astar']
+      }
+    ]
+  },
+  switchToShidenNetwork: {
+    method: 'wallet_switchEthereumChain',
+    params: [
+      {
+        chainId: '0x150'
+      }
+    ]
+  },
+  addShibuyaNetwork: {
+    method: 'wallet_addEthereumChain',
+    params: [
+      {
+        chainId: '0x51',
+        rpcUrls: ['https://evm.shibuya.astar.network'],
+        chainName: 'Shibuya Testnet',
+        nativeCurrency: { name: 'SBY', decimals: 18, symbol: 'SBY' },
+        blockExplorerUrls: ['https://blockscout.com/shibuya']
+      }
+    ]
+  },
+  switchToShibuyaNetwork: {
+    method: 'wallet_switchEthereumChain',
+    params: [
+      {
+        chainId: '0x51' // 81
       }
     ]
   },
