@@ -10,7 +10,7 @@ import SubWalletLogo from './SubWalletLogo.svg';
 
 export const PREDEFINED_EVM_WALLETS: EvmWalletInfo[] = [
   {
-    extensionName: 'subWalletEthereum',
+    extensionName: 'SubWallet',
     title: 'SubWallet (EVM)',
     installUrl: 'https://chrome.google.com/webstore/detail/subwallet/onhogfjeacnfoofkfgppdlbmlmnplgbn',
     logo: {

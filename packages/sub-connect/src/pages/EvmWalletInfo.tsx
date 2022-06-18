@@ -281,8 +281,15 @@ function EvmWalletInfo (): React.ReactElement {
         });
       }
 
-      wallet?.extension?.on('chainChanged', () => {
-        windowReload();
+      wallet?.extension?.on('chainChanged', (chainId) => {
+        if (chainId) {
+          windowReload();
+        } else {
+          setChainId(undefined);
+          setNetwork(undefined);
+          setBalance(undefined);
+          setWarningNetwork('Please select at least one button below to switch to EVM network');
+        }
       });
 
       wallet?.extension?.on('accountsChanged', () => {
@@ -442,7 +449,7 @@ function EvmWalletInfo (): React.ReactElement {
       <div className='evm-wallet-info-page__section'>
         <div className='evm-wallet-info-page__text'>Basic Information</div>
         <div>Network: {network && <span className='account-item__content'>{network?.name} ({chainId})</span>}</div>
-        <div>Status: <span className='account-item__content'>{wallet?.extension?.isConnected() ? 'Connected' : 'Disconnected'}</span></div>
+        <div>Status: <span className='account-item__content'>{(wallet?.extension?.isConnected() && chainId) ? 'Connected' : 'Disconnected'}</span></div>
         <div>Current Address: <span className='account-item__content font-mono'>{accounts.join(', ')}</span></div>
         <div>Balance: <span className='account-item__content'>{balance} {network?.nativeCurrency.symbol}</span></div>
       </div>
