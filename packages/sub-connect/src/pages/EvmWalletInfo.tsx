@@ -276,20 +276,11 @@ function EvmWalletInfo (): React.ReactElement {
             .on('error', console.error);
         }
       } else {
-        makeRequest(METHOD_MAP.addMoonbaseAlphaNetwork, windowReload, (e) => {
-          setWarningNetwork('Auto switch network request is rejected.\nPlease select at least one button below to switch manually');
-        });
+        setWarningNetwork('Please select at least one button below to switch to EVM network');
       }
 
       wallet?.extension?.on('chainChanged', (chainId) => {
-        if (chainId) {
-          windowReload();
-        } else {
-          setChainId(undefined);
-          setNetwork(undefined);
-          setBalance(undefined);
-          setWarningNetwork('Please select at least one button below to switch to EVM network');
-        }
+        windowReload();
       });
 
       wallet?.extension?.on('accountsChanged', () => {
