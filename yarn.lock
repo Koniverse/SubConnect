@@ -3477,7 +3477,7 @@ __metadata:
     "@ant-design/icons": ^4.7.0
     "@ethersproject/keccak256": ^5.6.1
     "@polkadot/dev": ^0.66.28
-    "@subwallet/wallet-connect": ^0.2.1
+    "@subwallet/wallet-connect": ^0.2.3
     "@testing-library/jest-dom": ^5.14.1
     "@testing-library/react": ^12.0.0
     "@testing-library/user-event": ^13.2.1
@@ -3521,7 +3521,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@subwallet/wallet-connect@^0.2.1, @subwallet/wallet-connect@workspace:packages/wallet-connect":
+"@subwallet/wallet-connect@^0.2.3, @subwallet/wallet-connect@workspace:packages/wallet-connect":
   version: 0.0.0-use.local
   resolution: "@subwallet/wallet-connect@workspace:packages/wallet-connect"
   dependencies:
@@ -3535,6 +3535,17 @@ __metadata:
     "@polkadot/util": ^9.2.1
     "@types/web3-provider-engine": ^14.0.1
     web3-core: ^1.7.3
+  languageName: unknown
+  linkType: soft
+
+"@subwallet/web3-react-subwallet-connector-v6@workspace:packages/web3-react-subwallet-connector-v6":
+  version: 0.0.0-use.local
+  resolution: "@subwallet/web3-react-subwallet-connector-v6@workspace:packages/web3-react-subwallet-connector-v6"
+  dependencies:
+    "@polkadot/util": ^9.5.1
+    "@web3-react/abstract-connector": ^6.0.7
+    "@web3-react/types": ^6.0.7
+    tiny-warning: ^1.0.3
   languageName: unknown
   linkType: soft
 
@@ -4523,6 +4534,22 @@ __metadata:
     prettier:
       optional: true
   checksum: 70fee2289a4f54ec1be4d46136ee9b9893e31bf5622cead5be06c3dfb83449c3dbe6f8c03404625ccf302d0628ff9e2ea1debfae609d1bfe1d065d8f57c5dba8
+  languageName: node
+  linkType: hard
+
+"@web3-react/abstract-connector@npm:^6.0.7":
+  version: 6.0.7
+  resolution: "@web3-react/abstract-connector@npm:6.0.7"
+  dependencies:
+    "@web3-react/types": ^6.0.7
+  checksum: fa8b0ea3586e248da84756979dd5c5f6ddc2d1657a1698de63a6d0e38035c4b122841bd0e6b00f1a6f1825614b22f6552a584cafec3470ca6fbc2e127ab30b2a
+  languageName: node
+  linkType: hard
+
+"@web3-react/types@npm:^6.0.7":
+  version: 6.0.7
+  resolution: "@web3-react/types@npm:6.0.7"
+  checksum: 29ae264ae4a126e520a64a4b466ea712ee09b934f3fe13b957e09269249ffc882712cf11fff12c1c19dd66e38503075b4adf5e9d5f588ea0dd31bbedf6fa9a42
   languageName: node
   linkType: hard
 
@@ -19649,6 +19676,13 @@ __metadata:
   version: 4.0.1
   resolution: "timed-out@npm:4.0.1"
   checksum: 98efc5d6fc0d2a329277bd4d34f65c1bf44d9ca2b14fd267495df92898f522e6f563c5e9e467c418e0836f5ca1f47a84ca3ee1de79b1cc6fe433834b7f02ec54
+  languageName: node
+  linkType: hard
+
+"tiny-warning@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "tiny-warning@npm:1.0.3"
+  checksum: da62c4acac565902f0624b123eed6dd3509bc9a8d30c06e017104bedcf5d35810da8ff72864400ad19c5c7806fc0a8323c68baf3e326af7cb7d969f846100d71
   languageName: node
   linkType: hard
 
