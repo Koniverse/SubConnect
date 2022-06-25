@@ -21,17 +21,32 @@ const { Option } = Select;
 // Json file is download from https://chainid.network/chains.json
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const chainList = require('./evmChains.json') as NetworkInfo[];
+const chain81Index = chainList.findIndex((n) => n.chainId === 81)
+if (chain81Index) {
+  chainList[chain81Index] = {
+    'name': 'Shibuya Testnet',
+    'chain': 'Shibuya',
+    'rpc': ['wss://rpc.shibuya.astar.network'],
+    'faucets': [],
+    'nativeCurrency': { 'name': 'Shibuya', 'symbol': 'SBY', 'decimals': 18 },
+    'infoURL': 'https://shiden.astar.network/',
+    'chainId': 81,
+    'networkId': 81,
+    'shortName': 'SBY',
+    'explorers': [{ 'name': 'subscan', 'url': 'https://shibuya.subscan.io', 'standard': 'none' }]
+  }
+}
 
 interface NetworkInfo {
   name: string,
   chain: string,
   rpc: string[],
-  faucets: [],
+  faucets: string[],
   nativeCurrency: { name: string, 'symbol': string, 'decimals': number },
   infoURL: string,
   shortName: string,
-  chainId: string,
-  networkId: string,
+  chainId: number,
+  networkId: number,
   explorers: [{ 'name': string, 'url': string, 'standard': string }]
 }
 
@@ -221,7 +236,7 @@ function EvmWalletInfo (): React.ReactElement {
 
   const generateRequestButton = useCallback(
     (label: string, args: RequestArguments, callback?: (rs: Maybe<unknown>) => void, disabled?: boolean) => (<Button
-      className='sub-wallet-btn sub-wallet-btn-small-size'
+      className="sub-wallet-btn sub-wallet-btn-small-size"
       disabled={disabled}
       key={label}
       // eslint-disable-next-line react/jsx-no-bind
@@ -235,62 +250,62 @@ function EvmWalletInfo (): React.ReactElement {
   );
 
   useEffect(() => {
-    const init = async () => {
-      if (!wallet) {
-        return;
-      }
-
-      await wallet.isReady;
-
-      const w3 = wallet?.extension && new Web3(wallet.extension as AbstractProvider);
-
-      const _chainId = await wallet?.request<string>({ method: 'eth_chainId' });
-
-      if (_chainId) {
-        const cid = parseInt(_chainId, 16);
-
-        setChainId(cid);
-        // eslint-disable-next-line eqeqeq
-        const chain = chainList.find((network) => network.chainId == String(cid));
-
-        setNetwork(chain);
-
-        const _accounts = await wallet?.request<string[]>({ method: 'eth_accounts' });
-
-        _accounts && setAccounts(_accounts as string[]);
-
-        if (_accounts && _accounts[0]) {
-          getBalance(_accounts as string[], chain as NetworkInfo);
-
-          setInterval(() => {
-            getBalance(_accounts as string[], chain as NetworkInfo);
-          }, 30000);
-
-          w3?.eth.subscribe('newBlockHeaders')
-            .on('connected', function (subscriptionId) {
-              console.log('Subscribe network with id ' + subscriptionId);
-            })
-            .on('data', function (blockHeader) {
-              setLastestBlock(blockHeader.number);
-            })
-            .on('error', console.error);
+      const init = async () => {
+        if (!wallet) {
+          return;
         }
-      } else {
-        setWarningNetwork('Please select at least one button below to switch to EVM network');
-      }
 
-      wallet?.extension?.on('chainChanged', (chainId) => {
-        windowReload();
-      });
+        await wallet.isReady;
 
-      wallet?.extension?.on('accountsChanged', () => {
-        windowReload();
-      });
-    };
+        const w3 = wallet?.extension && new Web3(wallet.extension as AbstractProvider);
 
-    init().catch(console.error);
-  }
-  , [getBalance, makeRequest, wallet]);
+        const _chainId = await wallet?.request<string>({ method: 'eth_chainId' });
+
+        if (_chainId) {
+          const cid = parseInt(_chainId, 16);
+
+          setChainId(cid);
+          // eslint-disable-next-line eqeqeq
+          const chain = chainList.find((network) => network.chainId == cid);
+
+          setNetwork(chain);
+
+          const _accounts = await wallet?.request<string[]>({ method: 'eth_accounts' });
+
+          _accounts && setAccounts(_accounts as string[]);
+
+          if (_accounts && _accounts[0]) {
+            getBalance(_accounts as string[], chain as NetworkInfo);
+
+            setInterval(() => {
+              getBalance(_accounts as string[], chain as NetworkInfo);
+            }, 30000);
+
+            w3?.eth.subscribe('newBlockHeaders')
+              .on('connected', function (subscriptionId) {
+                console.log('Subscribe network with id ' + subscriptionId);
+              })
+              .on('data', function (blockHeader) {
+                setLastestBlock(blockHeader.number);
+              })
+              .on('error', console.error);
+          }
+        } else {
+          setWarningNetwork('Please select at least one button below to switch to EVM network');
+        }
+
+        wallet?.extension?.on('chainChanged', (chainId) => {
+          windowReload();
+        });
+
+        wallet?.extension?.on('accountsChanged', () => {
+          windowReload();
+        });
+      };
+
+      init().catch(console.error);
+    }
+    , [getBalance, makeRequest, wallet]);
 
   const _onChangeTransactionToAddress = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -437,109 +452,113 @@ function EvmWalletInfo (): React.ReactElement {
 
   return <div className={'boxed-container'}>
     <div className={'evm-wallet-info-page'}>
-      <div className='evm-wallet-info-page__section'>
-        <div className='evm-wallet-info-page__text'>Basic Information</div>
-        <div>Network: {network && <span className='account-item__content'>{network?.name} ({chainId})</span>}</div>
-        <div>Status: <span className='account-item__content'>{(wallet?.extension?.isConnected() && chainId) ? 'Connected' : 'Disconnected'}</span></div>
-        <div>Current Address: <span className='account-item__content font-mono'>{accounts.join(', ')}</span></div>
-        <div>Balance: <span className='account-item__content'>{balance} {network?.nativeCurrency.symbol}</span></div>
+      <div className="evm-wallet-info-page__section">
+        <div className="evm-wallet-info-page__text">Basic Information</div>
+        <div>Network: {network && <span className="account-item__content">{network?.name} ({chainId})</span>}</div>
+        <div>Status: <span className="account-item__content">{(wallet?.extension?.isConnected() && chainId) ? 'Connected' : 'Disconnected'}</span></div>
+        <div>Current Address: <span className="account-item__content font-mono">{accounts.join(', ')}</span></div>
+        <div>Balance: <span className="account-item__content">{balance} {network?.nativeCurrency.symbol}</span></div>
       </div>
-      <div className='evm-wallet-info-page__section'>
-        <div className='evm-wallet-info-page__text'>Permissions</div>
-        <div className='evm-wallet-info__button_group'>
+      <div className="evm-wallet-info-page__section">
+        <div className="evm-wallet-info-page__text">Permissions</div>
+        <div className="evm-wallet-info__button_group">
           {generateRequestButton('Get Permissions', METHOD_MAP.getPermissions, handlePermissionsRs)}
           {generateRequestButton('Request Permissions', METHOD_MAP.requestPermissions, handlePermissionsRs)}
         </div>
         {availableAccounts.length > 0 && (
           <div>
             <div>Available Accounts:</div>
-            <div><span className='account-item__content font-mono'>{availableAccounts.join('\n')}</span></div>
+            <div><span className="account-item__content font-mono">{availableAccounts.join('\n')}</span></div>
           </div>
         )}
       </div>
-      <div className='evm-wallet-info-page__section'>
-        <div className='evm-wallet-info-page__text'>Network Actions</div>
-        {warningNetwork && <div className='warning-text'>{warningNetwork}</div>}
-        <div className='evm-wallet-info__button_group'>
-          <div className='evm-wallet-info__button_row'>
+      <div className="evm-wallet-info-page__section">
+        <div className="evm-wallet-info-page__text">Network Actions</div>
+        {warningNetwork && <div className="warning-text">{warningNetwork}</div>}
+        <div className="evm-wallet-info__button_group">
+          <div className="evm-wallet-info__button_row">
             {generateRequestButton('Add Moonbeam Network', METHOD_MAP.addMoonbeamNetwork, undefined, chainId === 1284)}
             {generateRequestButton('Switch to Moonbeam', METHOD_MAP.switchToMoonbeamNetwork, undefined, chainId === 1284)}
           </div>
-          <div className='evm-wallet-info__button_row'>
+          <div className="evm-wallet-info__button_row">
             {generateRequestButton('Add Moonriver Network', METHOD_MAP.addMoonriverNetwork, undefined, chainId === 1285)}
             {generateRequestButton('Switch to Moonriver', METHOD_MAP.switchToMoonriverNetwork, undefined, chainId === 1285)}
           </div>
-          <div className='evm-wallet-info__button_row'>
+          <div className="evm-wallet-info__button_row">
             {generateRequestButton('Add Moonbase Network', METHOD_MAP.addMoonbaseAlphaNetwork, undefined, chainId === 1287)}
             {generateRequestButton('Switch to Moonbase', METHOD_MAP.switchToMoonbaseAlphaNetwork, undefined, chainId === 1287)}
           </div>
-          <div className='evm-wallet-info__button_row'>
+          <div className="evm-wallet-info__button_row">
             {generateRequestButton('Add Astar Network', METHOD_MAP.addAstarNetwork, undefined, chainId === 592)}
             {generateRequestButton('Switch to Astar', METHOD_MAP.switchToAstarNetwork, undefined, chainId === 592)}
           </div>
-          <div className='evm-wallet-info__button_row'>
+          <div className="evm-wallet-info__button_row">
             {generateRequestButton('Add Shiden Network', METHOD_MAP.addShidenNetwork, undefined, chainId === 336)}
             {generateRequestButton('Switch to Shiden', METHOD_MAP.switchToShidenNetwork, undefined, chainId === 336)}
           </div>
+          <div className="evm-wallet-info__button_row">
+            {generateRequestButton('Add Shibuya Network', METHOD_MAP.addShibuyaNetwork, undefined, chainId === 81)}
+            {generateRequestButton('Switch to Shibuya', METHOD_MAP.switchToShibuyaNetwork, undefined, chainId === 81)}
+          </div>
         </div>
       </div>
-      <div className='evm-wallet-info-page__section'>
-        <div className='evm-wallet-info-page__text'>Transactions</div>
-        <div className='evm-wallet-transaction_row'>
-          <span className='label'>From Address</span>
+      <div className="evm-wallet-info-page__section">
+        <div className="evm-wallet-info-page__text">Transactions</div>
+        <div className="evm-wallet-transaction_row">
+          <span className="label">From Address</span>
           <Input
-            className='code'
+            className="code"
             readOnly
-            type='text'
+            type="text"
             value={accounts[0]}
           />
         </div>
-        <div className='evm-wallet-transaction_row'>
-          <span className='label'>To Address</span>
+        <div className="evm-wallet-transaction_row">
+          <span className="label">To Address</span>
           <Input
-            className='code'
+            className="code"
             onChange={_onChangeTransactionToAddress}
-            type='text'
+            type="text"
           />
         </div>
-        <div className='evm-wallet-transaction_row'>
-          <span className='label'>Amount</span>
+        <div className="evm-wallet-transaction_row">
+          <span className="label">Amount</span>
           <Input
-            className='code'
+            className="code"
             defaultValue={transactionAmount}
             onChange={_onChangeTransactionAmount}
-            type='number'
+            type="number"
           />
-          <span className='suffix'>{network?.nativeCurrency.symbol}</span>
+          <span className="suffix">{network?.nativeCurrency.symbol}</span>
         </div>
         <div>
           <Button
-            className='sub-wallet-btn sub-wallet-btn-small-size transaction-button'
+            className="sub-wallet-btn sub-wallet-btn-small-size transaction-button"
             onClick={sendTransaction}
           >Send transaction</Button>
           {transactionLink && <div>
             Check transaction on block explorer by click
             <a
               href={transactionLink}
-              rel='noreferrer'
-              target='_blank'
+              rel="noreferrer"
+              target="_blank"
             > here</a>
           </div>}
         </div>
       </div>
-      <div className='evm-wallet-info-page__section'>
-        <div className='evm-wallet-info-page__text'>Signature</div>
-        <div className='evm-wallet-transaction_row'>
-          <span className='label'>Message</span>
+      <div className="evm-wallet-info-page__section">
+        <div className="evm-wallet-info-page__text">Signature</div>
+        <div className="evm-wallet-transaction_row">
+          <span className="label">Message</span>
           <Input
-            className='code'
+            className="code"
             defaultValue={signMessage}
             onChange={_onChangeSignMessage}
-            type='text'
+            type="text"
           />
         </div>
-        <div className='evm-wallet-transaction_row'>
-          <span className='label'>Sign Method</span>
+        <div className="evm-wallet-transaction_row">
+          <span className="label">Sign Method</span>
           <Select
             defaultValue={signMethod}
             onChange={_onChangeSignMethod}
@@ -550,43 +569,43 @@ function EvmWalletInfo (): React.ReactElement {
             >{v.name}</Option>))}
           </Select>
         </div>
-        <div className='evm-wallet-transaction_row'>
+        <div className="evm-wallet-transaction_row">
           <Button
-            className='sub-wallet-btn sub-wallet-btn-small-size max-w'
+            className="sub-wallet-btn sub-wallet-btn-small-size max-w"
             onClick={signData}
           >Sign Data</Button>
         </div>
-        <div className='evm-wallet-transaction_row'>
-          <span className='label'>Result</span>
+        <div className="evm-wallet-transaction_row">
+          <span className="label">Result</span>
           <Input
-            className='code'
+            className="code"
             readOnly={true}
-            type='text'
+            type="text"
             value={signature}
           />
         </div>
         {signMethod !== 'ethSign' && <div>
-          <div className='evm-wallet-transaction_row'>
+          <div className="evm-wallet-transaction_row">
             <Button
-              className='sub-wallet-btn sub-wallet-btn-small-size max-w'
+              className="sub-wallet-btn sub-wallet-btn-small-size max-w"
               disabled={signature === ''}
               onClick={verifySignature}
             >Verify Signature</Button>
           </div>
-          <div className='evm-wallet-transaction_row'>
-            <span className='label'>Validate Result</span>
+          <div className="evm-wallet-transaction_row">
+            <span className="label">Validate Result</span>
             <Input
-              className='code'
+              className="code"
               readOnly={true}
-              type='text'
+              type="text"
               value={signatureValidation}
             />
           </div>
         </div>}
       </div>
-      <div className='evm-wallet-info-page__section'>
-        <div className='evm-wallet-info-page__text'>Connect provider with web3.js</div>
-        <div>Latest block: <span className='account-item__content'>{lastestBlock}</span></div>
+      <div className="evm-wallet-info-page__section">
+        <div className="evm-wallet-info-page__text">Connect provider with web3.js</div>
+        <div>Latest block: <span className="account-item__content">{lastestBlock}</span></div>
       </div>
     </div>
   </div>;
