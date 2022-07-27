@@ -5,6 +5,7 @@ import { getWallets } from '@subwallet/wallet-connect/dotsama/wallets';
 import { getEvmWallets } from '@subwallet/wallet-connect/evm/evmWallets';
 import { EvmWallet, Wallet } from '@subwallet/wallet-connect/types';
 import React, { useCallback } from 'react';
+import {useMobileDetect} from "@subwallet/sub-connect/hooks/useMobileDetect";
 
 require('./SelectWallet.scss');
 
@@ -15,6 +16,7 @@ interface Props {
 function SelectWallet ({ onSelectWallet }: Props): React.ReactElement<Props> {
   const dotsamaWallets = getWallets();
   const evmWallets = getEvmWallets();
+  const isMobile = useMobileDetect()
 
   const onClickDotsamaWallet = useCallback(
     (wallet: Wallet | EvmWallet) => {
@@ -70,18 +72,29 @@ function SelectWallet ({ onSelectWallet }: Props): React.ReactElement<Props> {
 
   return <div className={'select-wallet-wrapper'}>
     <div className={'select-wallet-content'}>
-      <div className='dotsama-wallet-list'>
+      {!isMobile && <div className='dotsama-wallet-list'>
         <div className='wallet-cat-title'>
           Dotsama Wallets
         </div>
         {dotsamaWallets.map((wallet) => (walletItem(wallet, onClickDotsamaWallet)))}
-      </div>
-      <div className='evm-wallet-list'>
+      </div>}
+      {!isMobile && <div className='evm-wallet-list'>
         <div className='wallet-cat-title'>
           EVM Wallets
         </div>
         {evmWallets.map((wallet) => (walletItem(wallet, onClickEvmWallet)))}
-      </div>
+      </div>}
+      {isMobile && <div className='evm-wallet-list'>
+        <div className='wallet-cat-title'>
+          Mobile Wallets
+        </div>
+        <div>
+          MetaMask
+        </div>
+        <div>
+          SubWallet
+        </div>
+      </div>}
     </div>
   </div>;
 }

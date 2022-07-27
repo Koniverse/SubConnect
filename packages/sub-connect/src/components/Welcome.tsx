@@ -1,11 +1,11 @@
 // Copyright 2019-2022 @subwallet/sub-connect authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Button } from 'antd';
-import React, { useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {Button} from 'antd';
+import React, {useContext, useEffect} from 'react';
+import {useNavigate} from 'react-router-dom';
 
-import { OpenSelectWallet, WalletContext } from '../contexts';
+import {OpenSelectWallet, WalletContext} from '../contexts';
 
 require('./Welcome.scss');
 

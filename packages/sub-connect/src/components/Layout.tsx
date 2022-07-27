@@ -1,7 +1,7 @@
 // Copyright 2019-2022 @subwallet/sub-connect authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useLocalStorage } from '@subwallet/sub-connect/hooks/useLocalStorage/useLocalStorage';
+import { useLocalStorage } from '@subwallet/sub-connect/hooks/useLocalStorage';
 import { Switch } from 'antd';
 import React, { useCallback, useContext, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
@@ -37,7 +37,7 @@ function Layout (): React.ReactElement<null> {
     <div className={`main-content ${theme === 'dark' ? '-dark' : '-light'}`}>
       <Switch
         checkedChildren='Light'
-        className='sub-wallet-switch-theme'
+        className={(!!walletContext.wallet || !!walletContext.evmWallet) ? 'sub-wallet-switch-theme with-header' : 'sub-wallet-switch-theme'}
         defaultChecked={theme === 'light'}
         onChange={_onChangeTheme}
         unCheckedChildren='Dark'

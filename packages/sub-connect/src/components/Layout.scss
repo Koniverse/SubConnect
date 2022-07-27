@@ -11,19 +11,19 @@
 }
 
 @media (max-width: 840px) {
-  .sub-wallet-switch-theme {
-    right: 300px;
-  }
-}
-
-@media (max-width: 768px) {
-  .sub-wallet-switch-theme {
-    right: 250px;
+  .sub-wallet-switch-theme.with-header {
+    right: calc((100% - 620px)/2 + 186px);
   }
 }
 
 @media (max-width: 600px) {
-  .sub-wallet-switch-theme {
-    right: 200px;
+  .sub-wallet-switch-theme.with-header {
+    right: 185px;
+  }
+}
+
+@media (max-width: 440px) {
+  .sub-wallet-switch-theme.ant-switch {
+    display: none;
   }
 }

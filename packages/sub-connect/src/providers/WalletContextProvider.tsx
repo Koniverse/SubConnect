@@ -1,7 +1,7 @@
 // Copyright 2019-2022 @subwallet/wallet-connect authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useLocalStorage } from '@subwallet/sub-connect/hooks/useLocalStorage/useLocalStorage';
+import { useLocalStorage } from '@subwallet/sub-connect/hooks/useLocalStorage';
 import { windowReload } from '@subwallet/sub-connect/utils/window';
 import { getWalletBySource } from '@subwallet/wallet-connect/dotsama/wallets';
 import { getEvmWalletBySource } from '@subwallet/wallet-connect/evm/evmWallets';
