@@ -25,10 +25,13 @@
 
 .evm-wallet-info__button_row {
   display: flex;
+  flex-wrap: wrap;
   margin-left: -16px;
+
   .ant-btn {
     width: 100%;
     margin-left: 16px;
+    flex: 1 1 260px;
   }
 }
 
@@ -40,17 +43,31 @@
 
 .evm-wallet-transaction_row {
   display: flex;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   align-items: center;
+  flex-wrap: wrap;
 
   .label {
     width: 110px;
+    margin-bottom: 8px;
   }
-  .ant-input, .ant-select, .max-w {
-    flex: 1;
+  .ant-input, .ant-select, .input-wrapper,.max-w {
+    flex: 1 1 200px;
+    margin-bottom: 8px;
+  }
+  .input-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 0;
+    align-items: center;
+
+    .ant-input {
+      flex: 1 1 120px;
+    }
   }
   .suffix {
-    padding-left: 12px
+    padding-left: 12px;
+    margin-bottom: 8px;
   }
 }
 

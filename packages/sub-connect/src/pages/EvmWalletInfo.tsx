@@ -526,13 +526,15 @@ function EvmWalletInfo (): React.ReactElement {
         </div>
         <div className='evm-wallet-transaction_row'>
           <span className='label'>Amount</span>
-          <Input
-            className='code'
-            defaultValue={transactionAmount}
-            onChange={_onChangeTransactionAmount}
-            type='number'
-          />
-          <span className='suffix'>{network?.nativeCurrency.symbol}</span>
+          <div className="input-wrapper">
+            <Input
+              className='code'
+              defaultValue={transactionAmount}
+              onChange={_onChangeTransactionAmount}
+              type='number'
+            />
+            <span className='suffix'>{network?.nativeCurrency.symbol}</span>
+          </div>
         </div>
         <div>
           <Button

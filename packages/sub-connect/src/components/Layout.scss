@@ -22,8 +22,9 @@
   }
 }
 
-@media (max-width: 440px) {
-  .sub-wallet-switch-theme.ant-switch {
-    display: none;
+@media (max-width: 501px) {
+  .sub-wallet-switch-theme.with-header {
+    top: 100px;
+    right: 30px;
   }
 }

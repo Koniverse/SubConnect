@@ -28,3 +28,20 @@
     margin: 8px;
   }
 }
+
+@media (max-width: 501px) {
+  .wallet-header-content {
+    .wallet-title {
+      font-size: 18px;
+    }
+
+    .spacer {
+      flex: 1 1 10px;
+    }
+
+    .sub-wallet-btn {
+      padding-left: 3px;
+      padding-right: 3px;
+    }
+  }
+}
