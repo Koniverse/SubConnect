@@ -120,6 +120,10 @@ module.exports = (entry, alias = {}, useSplitChunk = false) => {
     context: __dirname,
     devtool: false,
     entry,
+    devServer: {
+      port: 8080,
+      hot: false
+    },
     module: {
       rules: [
         {
