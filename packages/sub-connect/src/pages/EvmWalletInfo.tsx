@@ -209,7 +209,9 @@ function EvmWalletInfo (): React.ReactElement {
         .then(callback)
         .catch(async (e: Error) => {
           errorCallback && errorCallback(e);
-          await message.error(e.message);
+          // @ts-ignore
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          await message.error(`${e.code}: ${e.message}`);
         });
     },
     [wallet]
@@ -526,7 +528,7 @@ function EvmWalletInfo (): React.ReactElement {
         </div>
         <div className='evm-wallet-transaction_row'>
           <span className='label'>Amount</span>
-          <div className="input-wrapper">
+          <div className='input-wrapper'>
             <Input
               className='code'
               defaultValue={transactionAmount}
@@ -540,7 +542,9 @@ function EvmWalletInfo (): React.ReactElement {
           <Button
             className='sub-wallet-btn sub-wallet-btn-small-size transaction-button'
             onClick={sendTransaction}
-          >Send transaction</Button>
+          >
+            Send transaction
+          </Button>
           {transactionLink && <div>
             Check transaction on block explorer by click
             <a
