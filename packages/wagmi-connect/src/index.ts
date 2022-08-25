@@ -29,13 +29,14 @@ export class SubWalletConnector extends InjectedConnector {
       chains,
       options: {
         name: 'SubWallet',
+        shimDisconnect: true,
         shimChainChangedDisconnect: true,
         ..._options
       }
     });
   }
 
-  override async connect({ chainId }: { chainId?: number } = {}): Promise<{ account: string; chain: { id: number; unsupported: boolean; }; provider: any; }> {
+  override async connect({ chainId }: { chainId?: number } = {}) {
     try {
       const provider = await this.getProvider();
       if (!provider) throw new ConnectorNotFoundError();
