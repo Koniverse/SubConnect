@@ -1,19 +1,9 @@
-// Copyright 2017-2022 @subwallet/wagmi-connect authors & contributors
+// Copyright 2017-2022 @subwallet/wagmi-connector authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import {
-  Chain,
-  ConnectorNotFoundError,
-  InjectedConnector,
-  ResourceUnavailableError,
-  RpcError,
-  UserRejectedRequestError
-} from '@wagmi/core';
-import { InjectedConnectorOptions } from '@wagmi/core/dist/declarations/src/connectors/injected';
+import { Chain, ConnectorNotFoundError, InjectedConnector, InjectedConnectorOptions, ResourceUnavailableError, RpcError, UserRejectedRequestError } from '@wagmi/core';
 
-export interface WagmiSubConnectOptions extends InjectedConnectorOptions {
-
-}
+export type WagmiSubConnectOptions = InjectedConnectorOptions
 
 type WagmiConstructorParams = {
   chains?: Chain[],
@@ -22,9 +12,9 @@ type WagmiConstructorParams = {
 
 export class SubWalletConnector extends InjectedConnector {
   override readonly id = 'subwallet';
-  override readonly ready = typeof window != 'undefined' && !!window.SubWallet;
+  override readonly ready = typeof window !== 'undefined' && !!window.SubWallet;
 
-  constructor({chains, options: _options}: WagmiConstructorParams = {}) {
+  constructor ({ chains, options: _options }: WagmiConstructorParams = {}) {
     super({
       chains,
       options: {
@@ -36,10 +26,13 @@ export class SubWalletConnector extends InjectedConnector {
     });
   }
 
-  override async connect({ chainId }: { chainId?: number } = {}) {
+  override async connect ({ chainId }: { chainId?: number } = {}) {
     try {
       const provider = await this.getProvider();
-      if (!provider) throw new ConnectorNotFoundError();
+
+      if (!provider) {
+        throw new ConnectorNotFoundError();
+      }
 
       if (provider.on) {
         provider.on('accountsChanged', this.onAccountsChanged);
@@ -56,22 +49,30 @@ export class SubWalletConnector extends InjectedConnector {
 
       if (chainId && id !== chainId) {
         const chain = await this.switchChain(chainId);
+
         id = chain.id;
         unsupported = this.isChainUnsupported(id);
       }
 
       return { account, chain: { id, unsupported }, provider };
     } catch (e) {
-      if (this.isUserRejectedRequestError(e)) throw new UserRejectedRequestError(e);
-      if ((<RpcError>e).code === -32002) throw new ResourceUnavailableError(e);
+      if (this.isUserRejectedRequestError(e)) {
+        throw new UserRejectedRequestError(e);
+      }
+
+      if ((<RpcError>e).code === -32002) {
+        throw new ResourceUnavailableError(e);
+      }
 
       throw e;
     }
   }
 
-  override async getProvider() {
-    if (typeof window === 'undefined') return;
+  override async getProvider () {
+    if (typeof window === 'undefined') {
+      return;
+    }
 
-    return window.SubWallet;
+    return Promise.resolve(window.SubWallet);
   }
 }

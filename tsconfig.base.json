@@ -8,7 +8,9 @@
       "@subwallet/wallet-connect": ["wallet-connect/src"],
       "@subwallet/wallet-connect/*": ["wallet-connect/src/*"],
       "@subwallet/web3-react-subwallet-connector-v6": ["web3-react-subwallet-connector-v6/src"],
-      "@subwallet/web3-react-subwallet-connector-v6/*": ["web3-react-subwallet-connector-v6/src/*"]
+      "@subwallet/web3-react-subwallet-connector-v6/*": ["web3-react-subwallet-connector-v6/src/*"],
+      "@subwallet/wagmi-connector": ["wagmi-connector/src"],
+      "@subwallet/wagmi-connector/*": ["wagmi-connector/src/*"]
     },
     "skipLibCheck": true
   }

@@ -1,0 +1,22 @@
+{
+  "bugs": "https://github.com/Koniverse/SubConnect/issues",
+  "homepage": "https://github.com/Koniverse/SubConnect/tree/master/packages/wagmi-connector#readme",
+  "license": "Apache-2.0",
+  "name": "@subwallet/wagmi-connector",
+  "repository": {
+    "directory": "packages/wagmi-connector",
+    "type": "git",
+    "url": "https://github.com/Koniverse/SubConnect.git"
+  },
+  "sideEffects": [
+    "./detectPackage.js",
+    "./detectPackage.cjs"
+  ],
+  "type": "module",
+  "version": "0.0.1",
+  "main": "index.js",
+  "dependencies": {
+    "@polkadot/util": "^9.2.1",
+    "@wagmi/core": "^0.5.4"
+  }
+}

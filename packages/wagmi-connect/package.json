@@ -1,8 +1,0 @@
-{
-  "name": "@subwallet/wagmi-connect",
-  "version": "0.0.1",
-  "type": "module",
-  "dependencies": {
-    "@wagmi/core": "^0.5.4"
-  }
-}

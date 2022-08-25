@@ -6,6 +6,7 @@
   "references": [
     { "path": "./packages/sub-connect/tsconfig.build.json" },
     { "path": "./packages/wallet-connect/tsconfig.build.json" },
-    { "path": "./packages/web3-react-subwallet-connector-v6/tsconfig.build.json" }
+    { "path": "./packages/web3-react-subwallet-connector-v6/tsconfig.build.json" },
+    { "path": "./packages/wagmi-connector/tsconfig.build.json"}
   ]
 }

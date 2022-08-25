@@ -70,6 +70,7 @@ export function createBundle ({ entries = {}, external, globals = {}, index, inj
 
 const pkgs = [
   '@subwallet/wallet-connect',
+  '@subwallet/wagmi-connector',
   '@subwallet/web3-react-subwallet-connector-v6'
 ];
 

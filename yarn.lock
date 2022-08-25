@@ -3521,10 +3521,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@subwallet/wagmi-connect@workspace:packages/wagmi-connect":
+"@subwallet/wagmi-connector@workspace:packages/wagmi-connector":
   version: 0.0.0-use.local
-  resolution: "@subwallet/wagmi-connect@workspace:packages/wagmi-connect"
+  resolution: "@subwallet/wagmi-connector@workspace:packages/wagmi-connector"
   dependencies:
+    "@polkadot/util": ^9.2.1
     "@wagmi/core": ^0.5.4
   languageName: unknown
   linkType: soft
