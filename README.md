@@ -29,5 +29,5 @@ Build `wallet-connect`, `web3-react-subwallet-connector-v6` packages.
 
 ## Documentations:
 You can find more information about this project with below link:
-- [How to project and another DApp interact with Dotsama wallet extensions](https://github.com/Koniverse/SubConnect/wiki/How-to-integrate-SubWallet-and-other-Dotsama-Wallet-to-DApp)
+- [How to integrate SubWallet to Substrate DApp](https://github.com/Koniverse/SubConnect/wiki/How-to-integrate-SubWallet-and-other-Dotsama-Wallet-to-DApp)
 - [Integrate SubWallet with EVM DApp](https://github.com/Koniverse/SubConnect/wiki/Integrate-SubWallet-with-EVM-DApp)
