@@ -18205,6 +18205,7 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@polkadot/dev": ^0.66.28
+    gh-pages: ^4.0.0
     jest-environment-jsdom: ^28.1.0
     jest-svg-transformer: ^1.0.0
     jest-transform-stub: ^2.0.0

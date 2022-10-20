@@ -21,8 +21,9 @@
   },
   "scripts": {
     "build": "koni-dev-build-ts",
-    "build:ui": "cd packages/sub-connect && yarn polkadot-exec-webpack --config webpack.config.cjs --mode production",
+    "build:ui": "yarn clean && cd packages/sub-connect && yarn polkadot-exec-webpack --config webpack.config.cjs --mode production",
     "clean": "polkadot-dev-clean-build",
+    "deploy:ui": "yarn build:ui && gh-pages --dist 'packages/sub-connect/build' --branch 'gh-pages'",
     "lint": "polkadot-dev-run-lint",
     "start": "yarn watch",
     "test": "polkadot-dev-run-test --detectOpenHandles'",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@polkadot/dev": "^0.66.28",
+    "gh-pages": "^4.0.0",
     "jest-environment-jsdom": "^28.1.0",
     "jest-svg-transformer": "^1.0.0",
     "jest-transform-stub": "^2.0.0"
