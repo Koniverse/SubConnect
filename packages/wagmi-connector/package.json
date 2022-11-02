@@ -13,10 +13,10 @@
     "./detectPackage.cjs"
   ],
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "dependencies": {
-    "@polkadot/util": "^9.2.1",
-    "@wagmi/core": "^0.5.4"
+    "@polkadot/util": "^10.1.11",
+    "@wagmi/core": "^0.6.8"
   }
 }

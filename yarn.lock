@@ -3525,8 +3525,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@subwallet/wagmi-connector@workspace:packages/wagmi-connector"
   dependencies:
-    "@polkadot/util": ^9.2.1
-    "@wagmi/core": ^0.5.4
+    "@polkadot/util": ^10.1.11
+    "@wagmi/core": ^0.6.8
   languageName: unknown
   linkType: soft
 
@@ -3541,7 +3541,7 @@ __metadata:
     "@polkadot/extension-dapp": ^0.43.2
     "@polkadot/extension-inject": ^0.43.2
     "@polkadot/types": ^8.5.1
-    "@polkadot/util": ^9.2.1
+    "@polkadot/util": ^10.1.11
     "@types/web3-provider-engine": ^14.0.1
     web3-core: ^1.7.3
   languageName: unknown
@@ -3551,7 +3551,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@subwallet/web3-react-subwallet-connector-v6@workspace:packages/web3-react-subwallet-connector-v6"
   dependencies:
-    "@polkadot/util": ^9.5.1
+    "@polkadot/util": ^10.1.11
     "@web3-react/abstract-connector": ^6.0.7
     "@web3-react/types": ^6.0.7
     tiny-warning: ^1.0.3
@@ -4546,12 +4546,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@wagmi/core@npm:^0.5.4":
-  version: 0.5.4
-  resolution: "@wagmi/core@npm:0.5.4"
+"@wagmi/core@npm:^0.6.8":
+  version: 0.6.8
+  resolution: "@wagmi/core@npm:0.6.8"
   dependencies:
+    abitype: ^0.1.7
     eventemitter3: ^4.0.7
-    zustand: ^4.0.0
+    zustand: ^4.1.1
   peerDependencies:
     "@coinbase/wallet-sdk": ">=3.3.0"
     "@walletconnect/ethereum-provider": ">=1.7.5"
@@ -4561,7 +4562,7 @@ __metadata:
       optional: true
     "@walletconnect/ethereum-provider":
       optional: true
-  checksum: 7041c4158f69178a31f88d41e4545e0d02195e80cbb8f790cf1d1a95c2683caf0f0d74fac8f65c44870ec2b01feb5d41ac884ab7e30e02058a5a334e9e23575a
+  checksum: 8e2942e3c72df4f0e146d78e12381ce15c88347b2432dda760dd91b5b610df0fc455f6ac0c3b36955a5255975927240ce04d3aebf3757d91c61fac0e3b079fc9
   languageName: node
   linkType: hard
 
@@ -4790,6 +4791,15 @@ __metadata:
   version: 1.1.1
   resolution: "abbrev@npm:1.1.1"
   checksum: a4a97ec07d7ea112c517036882b2ac22f3109b7b19077dc656316d07d308438aac28e4d9746dc4d84bf6b1e75b4a7b0a5f3cb30592419f128ca9a8cee3bcfa17
+  languageName: node
+  linkType: hard
+
+"abitype@npm:^0.1.7":
+  version: 0.1.7
+  resolution: "abitype@npm:0.1.7"
+  peerDependencies:
+    typescript: ">=4.7.4"
+  checksum: 9525a31100314f6b32a3418f304047464f1a038452208988325dd4c18558d5220a8d7f72aaaf04ad60961e1a05353cfa0b7e74a4f34492dc1ab8638422b267b3
   languageName: node
   linkType: hard
 
@@ -21702,9 +21712,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zustand@npm:^4.0.0":
-  version: 4.1.1
-  resolution: "zustand@npm:4.1.1"
+"zustand@npm:^4.1.1":
+  version: 4.1.4
+  resolution: "zustand@npm:4.1.4"
   dependencies:
     use-sync-external-store: 1.2.0
   peerDependencies:
@@ -21715,6 +21725,6 @@ __metadata:
       optional: true
     react:
       optional: true
-  checksum: 03eefb193e2ecb43a761c81cb60f517c2780289dab0f55f2cbdb91400924c6291abb5a007b32ee19787b8f72b6769f891a38b64fd296660c170d632c3182f6e1
+  checksum: a9ceb7849ebf407d31a6121be09acfb041324f6f45ca9a3f62ab85e2d840d0f48f157abd99ed7b9e08b96ebb4e15480b4a196ed8b1df8a5a9a2ba9afd7c639a7
   languageName: node
   linkType: hard
