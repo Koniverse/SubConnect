@@ -4,6 +4,8 @@
 import { WalletInfo } from '@subwallet/wallet-connect/types';
 
 // @ts-ignore
+import FearlessWalletLogo from './FearlessWalletLogo.svg';
+// @ts-ignore
 import PolkadotJsLogo from './PolkadotLogo.svg';
 // @ts-ignore
 import SubWalletLogo from './SubWalletLogo.svg';
@@ -36,6 +38,15 @@ export const PREDEFINED_WALLETS: WalletInfo[] = [
     logo: {
       src: TalismanLogo as string,
       alt: 'Talisman'
+    }
+  },
+  {
+    extensionName: 'fearless-wallet',
+    title: 'Fearless Wallet',
+    installUrl: 'https://chrome.google.com/webstore/detail/fearless-wallet/nhlnehondigmgckngjomcpcefcdplmgc',
+    logo: {
+      src: FearlessWalletLogo as string,
+      alt: 'Fearless Wallet Extension'
     }
   }
 ];
