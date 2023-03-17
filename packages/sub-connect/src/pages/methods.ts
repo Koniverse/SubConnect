@@ -70,7 +70,7 @@ export const METHOD_MAP: Record<string, RequestArguments> = {
     params: [
       {
         chainId: '0x250',
-        rpcUrls: ['https://evm.shibuya.astar.network'],
+        rpcUrls: ['https://astar.public.blastapi.io'],
         chainName: 'Astar',
         nativeCurrency: { name: 'ASTR', decimals: 18, symbol: 'ASTR' },
         blockExplorerUrls: ['https://blockscout.com/astar']
@@ -90,7 +90,7 @@ export const METHOD_MAP: Record<string, RequestArguments> = {
     params: [
       {
         chainId: '0x150', // 336
-        rpcUrls: ['https://evm.shibuya.astar.network'],
+        rpcUrls: ['https://shiden.public.blastapi.io'],
         chainName: 'Shiden',
         nativeCurrency: { name: 'SDN', decimals: 18, symbol: 'SDN' },
         blockExplorerUrls: ['https://blockscout.com/astar']

@@ -30,7 +30,7 @@ if (chain81Index) {
     rpc: ['wss://rpc.shibuya.astar.network'],
     faucets: [],
     nativeCurrency: { name: 'Shibuya', symbol: 'SBY', decimals: 18 },
-    infoURL: 'https://shiden.astar.network/',
+    infoURL: 'https://shibuya.astar.network/',
     chainId: 81,
     networkId: 81,
     shortName: 'SBY',
