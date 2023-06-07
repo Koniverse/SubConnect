@@ -1,7 +1,8 @@
 // Copyright 2017-2022 @subwallet/wagmi-connector authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Chain, ConnectorNotFoundError, InjectedConnector, InjectedConnectorOptions, ResourceUnavailableError, RpcError, UserRejectedRequestError } from '@wagmi/core';
+import {Chain, ConnectorNotFoundError, InjectedConnector, InjectedConnectorOptions, WindowProvider} from '@wagmi/core';
+import { UserRejectedRequestError, ResourceUnavailableRpcError, RpcError, getAddress } from 'viem'
 
 export type WagmiSubConnectOptions = InjectedConnectorOptions
 
@@ -20,7 +21,6 @@ export class SubWalletConnector extends InjectedConnector {
       options: {
         name: 'SubWallet',
         shimDisconnect: true,
-        shimChainChangedDisconnect: true,
         ..._options
       }
     });
@@ -57,18 +57,48 @@ export class SubWalletConnector extends InjectedConnector {
       return { account, chain: { id, unsupported }, provider };
     } catch (e) {
       if (this.isUserRejectedRequestError(e)) {
-        throw new UserRejectedRequestError(e);
+        throw new UserRejectedRequestError(e as  Error);
       }
 
       if ((<RpcError>e).code === -32002) {
-        throw new ResourceUnavailableError(e);
+        throw new ResourceUnavailableRpcError(e as Error);
       }
 
       throw e;
     }
   }
 
-  override async getProvider () {
+  override async getAccount(): Promise<`0x${string}`> {
+    const provider = await this.getProvider()
+    if (!provider)
+      throw new ConnectorNotFoundError()
+    let account: `0x${string}` | undefined
+
+    try {
+      account = await provider.request({ method: 'eth_accounts' })
+        .then(result => getAddress(result[0]))
+    }
+    catch {
+      console.warn('eth_accounts was unsuccessful, falling back to enable')
+    }
+
+    if (!account) {
+      try {
+        account = await provider.request({ method: 'eth_requestAccounts' })
+          .then(result => getAddress(result[0]))
+      }
+      catch {
+        console.warn('enable was unsuccessful, falling back to eth_accounts v2')
+      }
+    }
+
+    if (!account)
+      throw new UserRejectedRequestError(new Error('Fail to get accounts list'))
+
+    return account
+  }
+
+  override async getProvider (): Promise<WindowProvider | undefined>  {
     if (typeof window === 'undefined') {
       return;
     }
