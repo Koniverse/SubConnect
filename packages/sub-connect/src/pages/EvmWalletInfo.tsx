@@ -280,7 +280,7 @@ function EvmWalletInfo (): React.ReactElement {
         _accounts && setAccounts(_accounts as string[]);
 
         if (_accounts && _accounts[0]) {
-          getBalance(_accounts as string[], chain as NetworkInfo);
+          // getBalance(_accounts as string[], chain as NetworkInfo);
 
           setInterval(() => {
             getBalance(_accounts as string[], chain as NetworkInfo);

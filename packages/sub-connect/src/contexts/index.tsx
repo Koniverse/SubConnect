@@ -1,22 +1,29 @@
 // Copyright 2019-2022 @subwallet/sub-connect authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Wallet, WalletAccount } from '@subwallet/wallet-connect/src/types';
+import {
+  SubstrateWallet,
+  Wallet,
+  WalletAccount,
+  WalletConnectWallet,
+  WalletType
+} from '@subwallet/wallet-connect/src/types';
 import { EvmWallet } from '@subwallet/wallet-connect/types';
 import React from 'react';
 
 export interface WalletContextInterface {
-  wallet?: Wallet,
+  wallet?: SubstrateWallet,
   evmWallet?: EvmWallet,
+  walletConnectWallet?: WalletConnectWallet,
   accounts: WalletAccount[],
-  setWallet: (wallet: Wallet | EvmWallet | undefined, walletType: 'substrate'|'evm') => void
+  setWallet: (wallet: Wallet | undefined, walletType: WalletType) => void
   walletType: 'substrate'|'evm';
 }
 
 export const WalletContext = React.createContext<WalletContextInterface>({
   accounts: [],
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setWallet: (wallet, walletType: 'substrate'|'evm') => {},
+  setWallet: (wallet, walletType: WalletType) => {},
   walletType: 'substrate'
 });
 

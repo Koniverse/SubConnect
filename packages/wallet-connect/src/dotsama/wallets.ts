@@ -5,13 +5,13 @@
 
 import { BaseDotSamaWallet } from '@subwallet/wallet-connect/dotsama/BaseDotSamaWallet';
 import { PREDEFINED_WALLETS } from '@subwallet/wallet-connect/dotsama/predefinedWallet';
-import { Wallet, WalletInfo } from '@subwallet/wallet-connect/types';
+import { SubstrateWallet, WalletInfo } from '@subwallet/wallet-connect/types';
 
-const walletList: Wallet[] = [];
+const walletList: SubstrateWallet[] = [];
 
 // Add more wallet, please sure you call this method before any getWallets or getWalletBySource
 export function addWallet (data: WalletInfo) {
-  const wallet = (new BaseDotSamaWallet(data)) as Wallet;
+  const wallet = (new BaseDotSamaWallet(data)) as SubstrateWallet;
 
   walletList.push(wallet);
 }
@@ -22,11 +22,11 @@ PREDEFINED_WALLETS.forEach((walletInfo) => {
 });
 
 // Get all wallet
-export function getWallets (): Wallet[] {
+export function getWallets (): SubstrateWallet[] {
   return walletList;
 }
 
-export function getWalletBySource (source: string | unknown): Wallet | undefined {
+export function getWalletBySource (source: string | unknown): SubstrateWallet | undefined {
   return getWallets().find((wallet) => {
     return wallet.extensionName === source;
   });

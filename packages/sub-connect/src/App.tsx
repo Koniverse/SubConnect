@@ -9,6 +9,7 @@ import { HashRouter, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
 import Welcome from './components/Welcome';
 import WalletInfo from './pages/WalletInfo';
+import WalletConnectWalletInfo from './pages/WalletConnectWalletInfo';
 
 require('./App.scss');
 
@@ -39,6 +40,10 @@ export function App () {
             <Route
               element={<EvmWalletInfo />}
               path='/evm-wallet-info'
+            />
+            <Route
+              element={<WalletConnectWalletInfo />}
+              path='/wallet-connect'
             />
           </Route>
         </Routes>

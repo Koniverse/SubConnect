@@ -11,6 +11,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { OpenSelectWallet, WalletContext } from '../contexts';
 import SelectWallet from './SelectWallet';
+import { WalletType } from "@subwallet/wallet-connect/types";
+import { getWalletConnectWalletBySource } from "@subwallet/wallet-connect/wallet-connect/walletConnectWallets";
 
 interface Props {
   theme: string;
@@ -21,15 +23,31 @@ function SelectWalletModal ({ theme }: Props): React.ReactElement<Props> {
   const walletContext = useContext(WalletContext);
   const navigate = useNavigate();
   const onSelectWallet = useCallback(
-    (walletKey, walletType: 'substrate' | 'evm' = 'substrate') => {
-      if (walletType === 'substrate') {
-        walletContext.setWallet(getWalletBySource(walletKey), walletType);
-        openSelectWalletContext.close();
-        navigate('/wallet-info');
-      } else {
-        walletContext.setWallet(getEvmWalletBySource(walletKey), walletType);
-        openSelectWalletContext.close();
-        navigate('/evm-wallet-info');
+    (walletKey, walletType: WalletType = 'substrate') => {
+      switch (walletType) {
+        case "substrate":
+          walletContext.setWallet(getWalletBySource(walletKey), walletType);
+          break;
+        case "evm":
+          walletContext.setWallet(getEvmWalletBySource(walletKey), walletType);
+          break;
+        case "wallet_connect":
+          walletContext.setWallet(getWalletConnectWalletBySource(walletKey), walletType);
+          break;
+      }
+
+      openSelectWalletContext.close();
+
+      switch (walletType) {
+        case "substrate":
+          navigate('/wallet-info');
+          break;
+        case "evm":
+          navigate('/evm-wallet-info');
+          break;
+        case "wallet_connect":
+          navigate('/wallet-connect');
+          break;
       }
     },
     [navigate, openSelectWalletContext, walletContext]

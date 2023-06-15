@@ -3,14 +3,14 @@
 
 // This file is get idea from https://github.com/TalismanSociety/talisman-connect/blob/master/libs/wallets/src/lib/base-dotsama-wallet/index.ts
 
-import { SubscriptionFn, Wallet, WalletAccount, WalletInfo, WalletLogoProps } from '@subwallet/wallet-connect/types';
+import { SubscriptionFn, SubstrateWallet, WalletAccount, WalletInfo, WalletLogoProps } from '@subwallet/wallet-connect/types';
 
 import { InjectedAccount, InjectedExtension, InjectedMetadata, InjectedProvider, InjectedWindow } from '@polkadot/extension-inject/types';
 import { Signer } from '@polkadot/types/types';
 
 const DAPP_NAME = 'SubWallet Connect';
 
-export class BaseDotSamaWallet implements Wallet {
+export class BaseDotSamaWallet implements SubstrateWallet {
   extensionName: string;
   title: string;
   installUrl: string;

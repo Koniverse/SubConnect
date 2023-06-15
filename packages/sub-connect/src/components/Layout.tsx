@@ -17,8 +17,10 @@ function Layout (): React.ReactElement<null> {
   const [theme, setTheme] = useLocalStorage('sub-wallet-theme', 'dark');
   const navigate = useNavigate();
 
+  const haveWallet = !!walletContext.wallet || !!walletContext.evmWallet || !!walletContext.walletConnectWallet;
+
   useEffect(() => {
-    if (!walletContext.wallet && !walletContext.evmWallet) {
+    if (!haveWallet) {
       navigate('/welcome');
     }
 
@@ -37,12 +39,12 @@ function Layout (): React.ReactElement<null> {
     <div className={`main-content ${theme === 'dark' ? '-dark' : '-light'}`}>
       <Switch
         checkedChildren='Light'
-        className={(!!walletContext.wallet || !!walletContext.evmWallet) ? 'sub-wallet-switch-theme with-header' : 'sub-wallet-switch-theme'}
+        className={(haveWallet) ? 'sub-wallet-switch-theme with-header' : 'sub-wallet-switch-theme'}
         defaultChecked={theme === 'light'}
         onChange={_onChangeTheme}
         unCheckedChildren='Dark'
       />
-      <WalletHeader visible={!!walletContext.wallet || !!walletContext.evmWallet} />
+      <WalletHeader visible={haveWallet} />
       <Outlet />
       <SelectWalletModal theme={theme} />
     </div>

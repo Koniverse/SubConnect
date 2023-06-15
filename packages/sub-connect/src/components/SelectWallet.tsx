@@ -3,24 +3,26 @@
 
 import { getWallets } from '@subwallet/wallet-connect/dotsama/wallets';
 import { getEvmWallets } from '@subwallet/wallet-connect/evm/evmWallets';
-import { EvmWallet, Wallet } from '@subwallet/wallet-connect/types';
+import { Wallet, WalletType } from '@subwallet/wallet-connect/types';
 import React, { useCallback } from 'react';
+import { getWalletConnectWallets } from "@subwallet/wallet-connect/wallet-connect/walletConnectWallets";
 
 require('./SelectWallet.scss');
 
 interface Props {
-  onSelectWallet: (walletKey: string, walletType?: 'substrate' | 'evm') => void
+  onSelectWallet: (walletKey: string, walletType?: WalletType) => void
 }
 
 function SelectWallet ({ onSelectWallet }: Props): React.ReactElement<Props> {
   const dotsamaWallets = getWallets();
   const evmWallets = getEvmWallets();
+  const walletConnectWallets = getWalletConnectWallets();
 
   const onClickDotsamaWallet = useCallback(
-    (wallet: Wallet | EvmWallet) => {
+    (wallet: Wallet) => {
       return () => {
         if (wallet.installed) {
-          onSelectWallet(wallet.extensionName);
+          onSelectWallet(wallet.extensionName, 'substrate');
         }
       };
     },
@@ -28,7 +30,7 @@ function SelectWallet ({ onSelectWallet }: Props): React.ReactElement<Props> {
   );
 
   const onClickEvmWallet = useCallback(
-    (wallet: Wallet | EvmWallet) => {
+    (wallet: Wallet) => {
       return () => {
         if (wallet.installed) {
           onSelectWallet(wallet.extensionName, 'evm');
@@ -38,7 +40,18 @@ function SelectWallet ({ onSelectWallet }: Props): React.ReactElement<Props> {
     [onSelectWallet]
   );
 
-  const walletItem: (wallet: Wallet|EvmWallet, onSelect: (wallet: Wallet|EvmWallet) => () => void) => React.ReactElement = (wallet, onSelect) => (
+  const onClickWalletConnectWallet = useCallback(
+    (wallet: Wallet) => {
+      return () => {
+        if (wallet.installed) {
+          onSelectWallet(wallet.extensionName, 'wallet_connect');
+        }
+      };
+    },
+    [onSelectWallet]
+  );
+
+  const walletItem: (wallet: Wallet, onSelect: (wallet: Wallet) => () => void) => React.ReactElement = (wallet, onSelect) => (
     <div
       className={'wallet-item'}
       key={wallet.extensionName}
@@ -81,6 +94,12 @@ function SelectWallet ({ onSelectWallet }: Props): React.ReactElement<Props> {
           EVM Wallets
         </div>
         {evmWallets.map((wallet) => (walletItem(wallet, onClickEvmWallet)))}
+      </div>
+      <div className='evm-wallet-list'>
+        <div className='wallet-cat-title'>
+          EVM Wallets
+        </div>
+        {walletConnectWallets.map((wallet) => (walletItem(wallet, onClickWalletConnectWallet)))}
       </div>
     </div>
   </div>;

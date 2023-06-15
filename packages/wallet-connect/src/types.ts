@@ -21,7 +21,7 @@ export interface WalletAccount {
   address: string;
   source: string;
   name?: string;
-  wallet?: Wallet;
+  wallet?: SubstrateWallet;
   signer?: unknown;
 }
 
@@ -40,7 +40,7 @@ export interface WalletMethods {
   getAccounts: () => Promise<WalletAccount[] | null>
 }
 
-export interface Wallet extends WalletInfo, WalletMethods {
+export interface SubstrateWallet extends WalletInfo, WalletMethods {
   installed: boolean | undefined;
 
   extension: InjectedExtension | undefined;
@@ -67,7 +67,17 @@ export interface EvmWallet extends EvmWalletInfo, EvmWalletMethods {
   isReady: Promise<MetaMaskInpageProvider | undefined>;
 }
 
+export type WalletConnectWalletInfo = WalletInfo;
+
+export interface WalletConnectWallet extends WalletConnectWalletInfo, EvmWalletMethods {
+  installed: boolean;
+}
+
 // EVM request method callback event params
 export interface EvmConnectParams {
   chainId: string;
 }
+
+export type Wallet = SubstrateWallet | EvmWallet | WalletConnectWallet;
+
+export type WalletType = 'substrate' | 'evm' | 'wallet_connect'
