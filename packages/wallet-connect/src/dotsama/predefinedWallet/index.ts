@@ -11,6 +11,8 @@ import PolkadotJsLogo from './PolkadotLogo.svg';
 import SubWalletLogo from './SubWalletLogo.svg';
 // @ts-ignore
 import TalismanLogo from './TalismanLogo.svg';
+// @ts-ignore
+import PolkaGateLogo from './PolkaGateLogo.svg';
 
 export const PREDEFINED_WALLETS: WalletInfo[] = [
   {
@@ -47,6 +49,15 @@ export const PREDEFINED_WALLETS: WalletInfo[] = [
     logo: {
       src: FearlessWalletLogo as string,
       alt: 'Fearless Wallet Extension'
+    }
+  },
+  {
+    extensionName: 'polkagate',
+    title: 'PolkaGate',
+    installUrl: 'https://chrome.google.com/webstore/detail/polkagate-the-gateway-to/ginchbkmljhldofnbjabmeophlhdldgp',
+    logo: {
+      src: PolkaGateLogo as string,
+      alt: 'PolkaGate'
     }
   }
 ];
