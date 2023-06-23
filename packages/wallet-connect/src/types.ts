@@ -7,6 +7,7 @@ import { Maybe } from '@metamask/providers/dist/utils';
 
 import { InjectedExtension, InjectedMetadata, InjectedProvider, Unsubcall } from '@polkadot/extension-inject/types';
 import { Signer } from '@polkadot/types/types';
+import { PairingTypes } from "@walletconnect/types";
 
 export type SubscriptionFn = (
   accounts: WalletAccount[] | undefined
@@ -67,10 +68,32 @@ export interface EvmWallet extends EvmWalletInfo, EvmWalletMethods {
   isReady: Promise<MetaMaskInpageProvider | undefined>;
 }
 
-export type WalletConnectWalletInfo = WalletInfo;
+export type WalletConnectWalletInfo = Omit<WalletInfo, 'installUrl'>;
 
-export interface WalletConnectWallet extends WalletConnectWalletInfo, EvmWalletMethods {
+export interface WalletConnectRequestArguments {
+  request: {
+    method: string;
+    params: unknown[] | Record<string, unknown>;
+  },
+  chainId: string;
+}
+
+export interface WalletConnectWalletMethods {
+  setChains: (chains: string[]) => void;
+  connect: (pairing?: any) => Promise<void>;
+  disconnect: () => Promise<void>;
+  ping: () => Promise<boolean>;
+  createRequestHandler: <T>(rpcRequest: (chain: string, address: string) => Promise<T>) => ((chainId: string, address: string) => Promise<T>);
+  enable: () => Promise<boolean>;
+  sendRequest: <T>(args: WalletConnectRequestArguments) => Promise<T>;
+}
+
+export interface WalletConnectWallet extends WalletConnectWalletInfo, WalletConnectWalletMethods {
   installed: boolean;
+  isInitializing: boolean;
+  isConnected: boolean;
+  pairs: PairingTypes.Struct[];
+  accounts: string[];
 }
 
 // EVM request method callback event params

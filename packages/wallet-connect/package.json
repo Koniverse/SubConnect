@@ -26,7 +26,8 @@
     "@polkadot/extension-dapp": "^0.43.2",
     "@polkadot/extension-inject": "^0.43.2",
     "@polkadot/types": "^8.5.1",
-    "@polkadot/util": "^10.1.11"
+    "@polkadot/util": "^12.2.1",
+    "@polkadot/util-crypto": "^12.2.1"
   },
   "devDependencies": {
     "@metamask/detect-provider": "^1.2.0",

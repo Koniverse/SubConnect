@@ -1,22 +1,19 @@
 // Copyright 2019-2022 @subwallet/wallet-connect authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { MetaMaskInpageProvider } from '@metamask/providers';
-import { RequestArguments } from '@metamask/providers/dist/BaseProvider';
-import { Maybe } from '@metamask/types';
-import { WalletConnectWallet, WalletConnectWalletInfo, WalletLogoProps } from '@subwallet/wallet-connect/types';
+import { getRequiredNamespaces, isSameAddress } from "./helpers";
+import {
+  WalletConnectRequestArguments,
+  WalletConnectWallet,
+  WalletConnectWalletInfo,
+  WalletLogoProps
+} from '@subwallet/wallet-connect/types';
+import { WALLET_CONNECT_PROJECT_ID } from "@subwallet/wallet-connect/wallet-connect/constants";
 import Client from "@walletconnect/sign-client";
 import { PairingTypes, SessionTypes } from "@walletconnect/types";
 import { Web3Modal } from "@web3modal/standalone";
-import { getRequiredNamespaces } from '../evm/helper';
-import { CHAIN_SUPPORTED, WALLET_CONNECT_PROJECT_ID } from "@subwallet/wallet-connect/evm/constants";
+import { getSdkError } from "@walletconnect/utils";
 
-interface IFormattedRpcResponse<T> {
-  method?: string;
-  address?: string;
-  valid: boolean;
-  result: T;
-}
 
 const web3Modal = new Web3Modal({
   projectId: WALLET_CONNECT_PROJECT_ID,
@@ -26,15 +23,14 @@ const web3Modal = new Web3Modal({
 
 export class BaseWalletConnectWallet implements WalletConnectWallet {
   extensionName = '';
-  installUrl = '';
   logo: WalletLogoProps;
   title: string;
-  initEvent?: string;
   #client: Client | undefined;
   #session: SessionTypes.Struct | undefined;
   #pairings: PairingTypes.Struct[] = [];
   #pending: boolean = false;
-  #accounts: string[] = []
+  #accounts: string[] = [];
+  #chains: string[] = [];
 
   constructor({ extensionName, logo, title }: WalletConnectWalletInfo) {
     this.extensionName = extensionName;
@@ -42,82 +38,80 @@ export class BaseWalletConnectWallet implements WalletConnectWallet {
     this.title = title;
   }
 
-  get extension() {
-    if (this.#client) {
-      const result = this.#client as unknown as MetaMaskInpageProvider;
-      result.isConnected = () => true;
-      return result;
-    } else {
-      return undefined
-    }
+  // Init client
+  get installed(): boolean {
+    return true;
   }
 
-  get installed(): true {
-    return true;
+  // Init client
+  get isInitializing(): boolean {
+    return !!this.#client;
+  }
+
+  // Connect with a session
+  get isConnected() {
+    return !!this.#session;
   }
 
   async enable(): Promise<boolean> {
     await this.#createClient();
-    if (!this.#pairings.length) {
-      await this.connect();
-    }
     return true;
   }
 
-  #handleRequest<T>(args: RequestArguments) {
-    console.log(args);
-
-    switch (args.method) {
-      case 'eth_chainId':
-        return '504' as unknown as T;
-      case 'eth_accounts':
-        return this.#accounts as unknown as T;
-    }
-
-    return null;
+  setChains(chains: string[]) {
+    this.#chains = chains;
   }
 
-  async request<T>(args: RequestArguments): Promise<Maybe<T>> {
+  get pairs() {
+    return this.#pairings;
+  }
+
+  get accounts() {
+    return this.#accounts;
+  }
+
+  async disconnect() {
     if (typeof this.#client === "undefined") {
       throw new Error("WalletConnect is not initialized");
     }
-
-    let rs: Maybe<T> = this.#handleRequest<T>(args);
-
-    if (rs !== null) {
-      return Promise.resolve(rs)
+    if (typeof this.#session === "undefined") {
+      throw new Error("Session is not connected");
     }
 
-    return new Promise(async (resolve) => {
-      await this.#createJsonRpcRequestHandler(async (chainId, address) => {
+    try {
+      await this.#client.disconnect({
+        topic: this.#session.topic,
+        reason: getSdkError("USER_DISCONNECTED"),
+      });
+    } catch (error) {
+      console.error("SignClient.disconnect failed:", error);
+    } finally {
+      // Reset app state after disconnect.
+      this.#reset();
+    }
+  }
 
-        try {
-          rs = await this.#client!.request<T>({
-            request: {
-              method: args.method,
-              params: args.params
-            },
-            chainId: chainId,
-            topic: this.#session!.topic
-          })
+  async ping() {
+    if (typeof this.#client === "undefined") {
+      throw new Error("WalletConnect is not initialized");
+    }
+    if (typeof this.#session === "undefined") {
+      throw new Error("Session is not connected");
+    }
 
-          console.log('123123123', rs)
+    let valid = false;
 
-          return {
-            method: args.method,
-            address,
-            valid: true,
-            result: rs,
-          };
-        }catch (e) {
-          console.log(e)
-          throw e as Error;
-        }
+    try {
+      this.#setPending(true);
+      await this.#client.ping({ topic: this.#session.topic });
+      valid = true;
+    } catch (e) {
+      console.error(e);
+    } finally {
+      this.#setPending(false);
+    }
 
-      })('eip155:1284', this.#accounts[0]);
-
-      resolve(rs);
-    })
+    return valid;
   }
 
   async connect(pairing?: any) {
@@ -126,7 +120,7 @@ export class BaseWalletConnectWallet implements WalletConnectWallet {
     }
     console.log("connect, pairing topic is:", pairing?.topic);
     try {
-      const requiredNamespaces = getRequiredNamespaces(CHAIN_SUPPORTED.map((chainId) => `eip155:${chainId}`));
+      const requiredNamespaces = getRequiredNamespaces(this.#chains);
       console.log(
         "requiredNamespaces config for connect:",
         requiredNamespaces
@@ -170,8 +164,16 @@ export class BaseWalletConnectWallet implements WalletConnectWallet {
     this.#pending = val;
   }
 
-  #createJsonRpcRequestHandler<T>(rpcRequest: (chainId: string, address: string) => Promise<IFormattedRpcResponse<T>>): ((chainId: string, address: string) => Promise<void>) {
-    return async (chainId: string, address: string) => {
+  sendRequest<T>(args: WalletConnectRequestArguments): Promise<T> {
+    return this.#client!.request<T>({
+      request: args.request,
+      topic: this.#session!.topic,
+      chainId: args.chainId
+    })
+  }
+
+  createRequestHandler<T>(rpcRequest: (chain: string, address: string) => Promise<T>): ((chainId: string, address: string) => Promise<T>) {
+    return async (chain: string, address: string) => {
       if (typeof this.#client === "undefined") {
         throw new Error("WalletConnect is not initialized");
       }
@@ -184,21 +186,25 @@ export class BaseWalletConnectWallet implements WalletConnectWallet {
 
       try {
         this.#setPending(true);
-        const result = await rpcRequest(chainId, address);
-        console.log('success', result);
+        const caipAccountAddress = `${chain}:${address}`;
+        const account = this.#accounts.find(
+          (account) => {
+            const [namespace, ref, accAddress] = account.split(":");
+            const accChain = `${namespace}:${ref}`;
+            return isSameAddress(accAddress, address) && accChain === chain;
+          }
+        );
+        if (account === undefined) {
+          throw new Error(`Account for ${caipAccountAddress} not found`);
+        }
+
+        this.#setPending(false);
+        return await rpcRequest(chain, address);
         // setResult(result);
-        this.#setPending(false);
       } catch (err: any) {
-        console.log('error', err);
         console.error("RPC request failed: ", err);
-        // setResult({
-        //   address,
-        //   valid: false,
-        //   result: err?.message ?? err,
-        // });
         this.#setPending(false);
-      } finally {
-        console.log('finally', 123123123)
+        throw (err as Error);
       }
     };
   }
@@ -256,7 +262,7 @@ export class BaseWalletConnectWallet implements WalletConnectWallet {
     });
   }
 
-  async #checkPersistedState(_client: Client)  {
+  async #checkPersistedState(_client: Client) {
     if (typeof _client === "undefined") {
       throw new Error("WalletConnect is not initialized");
     }
@@ -281,18 +287,9 @@ export class BaseWalletConnectWallet implements WalletConnectWallet {
   }
 
   async #onSessionConnected(_session: SessionTypes.Struct) {
-    const allNamespaceAccounts = Object.values(_session.namespaces)
-    .map((namespace) => namespace.accounts)
-    .flat();
-
-    const accountMap: Record<string, string> = {};
-    allNamespaceAccounts.forEach((nameSpaceAccount) => {
-      const [, , accountAddress] = nameSpaceAccount.split(':');
-      accountMap[accountAddress] = accountAddress
-    })
-    // const allNamespaceChains = Object.keys(_session.namespaces);
-
-    this.#accounts = Object.keys(accountMap);
+    this.#accounts = Object.values(_session.namespaces)
+      .map((namespace) => namespace.accounts)
+      .flat();
 
     this.#session = _session;
     // setChains(allNamespaceChains);

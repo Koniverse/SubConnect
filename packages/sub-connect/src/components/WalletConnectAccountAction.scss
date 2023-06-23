@@ -1,0 +1,16 @@
+.account-action-container {
+  padding: 16px;
+  border: 1px solid white;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.chain-info {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+}

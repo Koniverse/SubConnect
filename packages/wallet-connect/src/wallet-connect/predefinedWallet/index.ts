@@ -10,7 +10,6 @@ export const PREDEFINED_WALLET_CONNECT_WALLETS: WalletConnectWalletInfo[] = [
   {
     extensionName: 'wallet-connect',
     title: 'Wallet Connect',
-    installUrl: '',
     logo: {
       src: WalletConnectLogo as string,
       alt: 'Wallet Connect'

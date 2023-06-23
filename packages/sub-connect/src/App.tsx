@@ -10,44 +10,47 @@ import Layout from './components/Layout';
 import Welcome from './components/Welcome';
 import WalletInfo from './pages/WalletInfo';
 import WalletConnectWalletInfo from './pages/WalletConnectWalletInfo';
+import { WalletConnectChainProvider } from './providers/WalletConnectChainProvider';
 
 require('./App.scss');
 
 // Add new example wallet
 // doAddWallet();
 
-export function App () {
+export function App() {
   return (
     <WalletContextProvider>
-      <HashRouter>
-        <Routes>
-          <Route
-            element={<Layout />}
-            path='/'
-          >
+      <WalletConnectChainProvider>
+        <HashRouter>
+          <Routes>
             <Route
-              element={<Welcome />}
-              index
-            />
-            <Route
-              element={<Welcome />}
-              path='/welcome'
-            />
-            <Route
-              element={<WalletInfo />}
-              path='/wallet-info'
-            />
-            <Route
-              element={<EvmWalletInfo />}
-              path='/evm-wallet-info'
-            />
-            <Route
-              element={<WalletConnectWalletInfo />}
-              path='/wallet-connect'
-            />
-          </Route>
-        </Routes>
-      </HashRouter>
+              element={<Layout/>}
+              path='/'
+            >
+              <Route
+                element={<Welcome/>}
+                index
+              />
+              <Route
+                element={<Welcome/>}
+                path='/welcome'
+              />
+              <Route
+                element={<WalletInfo/>}
+                path='/wallet-info'
+              />
+              <Route
+                element={<EvmWalletInfo/>}
+                path='/evm-wallet-info'
+              />
+              <Route
+                element={<WalletConnectWalletInfo/>}
+                path='/wallet-connect'
+              />
+            </Route>
+          </Routes>
+        </HashRouter>
+      </WalletConnectChainProvider>
     </WalletContextProvider>
   );
 }

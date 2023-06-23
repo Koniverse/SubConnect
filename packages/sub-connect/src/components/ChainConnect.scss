@@ -1,0 +1,20 @@
+.chain-connect-container {
+  padding: 16px;
+  border: 1px solid white;
+  width: 200px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.chain-connect-container.active {
+  border-color: #004BFF;
+}
+
+.chain-logo {
+  width: 40px;
+  height: 40px;
+}
