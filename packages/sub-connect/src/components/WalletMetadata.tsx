@@ -3,6 +3,7 @@
 
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { PlusCircleOutlined } from '@ant-design/icons';
+import { RequestAddPspToken } from "@subwallet/wallet-connect/types";
 import { Button, message } from 'antd';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 
@@ -68,6 +69,36 @@ function WalletMetadata (): React.ReactElement {
     [loadMetadata, walletContext.wallet?.metadata]
   );
 
+  const addToken = useCallback(
+    () => {
+      const metadata = walletContext.wallet?.metadata;
+
+      if (metadata) {
+        const requestAddPspToken: RequestAddPspToken = {
+          genesisHash: '0x05d5279c52c484cc80396535a316add7d47b1c5b9e0398dd1f584149341460c5',
+          tokenInfo: {
+            type: 'psp22',
+            address: '5DGHdeY4SXsZ2w8RZrgXXJwHXXe2Qg8LCnUoDTr3tnBnu2BC',
+            symbol: 'acv'
+          }
+        };
+        const key = 'add-token';
+
+        message.loading({ content: 'Adding Token', key });
+        metadata.addToken(requestAddPspToken)
+          .then((rs) => {
+            message.success({ content: 'Add Token Successfully!', key });
+            loadMetadata();
+          })
+          .catch((error) => {
+            console.error(error);
+            message.warn({ content: 'Add Token Failed or Cancelled!', key });
+          });
+      }
+    },
+    [loadMetadata, walletContext.wallet?.metadata]
+  );
+
   return (<div className={'wallet-metadata'}>
     <div className={'metadata-list'}>
       {injectedMetas.map((meta) =>
@@ -85,12 +116,21 @@ function WalletMetadata (): React.ReactElement {
           </div>
         </div>)}
     </div>
-    <Button
-      className='sub-wallet-btn sub-wallet-icon-btn'
-      icon={<PlusCircleOutlined />}
-      onClick={addMetadata}
-      type={'primary'}
-    >Add Example Metadata</Button>
+    <div className='wallet-action-button-group'>
+      <Button
+        className='sub-wallet-btn sub-wallet-icon-btn'
+        icon={<PlusCircleOutlined />}
+        onClick={addMetadata}
+        type={'primary'}
+      >Add Example Metadata</Button>
+      <Button
+        className='sub-wallet-btn sub-wallet-icon-btn'
+        icon={<PlusCircleOutlined />}
+        onClick={addToken}
+        type={'primary'}
+      >Add Example Token</Button>
+    </div>
+
   </div>);
 }
 
