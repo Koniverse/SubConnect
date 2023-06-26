@@ -46,8 +46,9 @@ export interface RequestAddPspToken {
     type: string;
     address: string;
     symbol: string;
-    name?: string;
+    name: string;
     decimals?: number;
+    logo?: string;
   };
 }
 

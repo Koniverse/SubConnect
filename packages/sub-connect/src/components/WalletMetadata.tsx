@@ -75,11 +75,12 @@ function WalletMetadata (): React.ReactElement {
 
       if (metadata) {
         const requestAddPspToken: RequestAddPspToken = {
-          genesisHash: '0x05d5279c52c484cc80396535a316add7d47b1c5b9e0398dd1f584149341460c5',
+          genesisHash: '0x05d5279c52c484cc80396535a316add7d47b1c5b9e0398dd1f584149341460c5', // Aleph zero testnet
           tokenInfo: {
             type: 'psp22',
             address: '5DGHdeY4SXsZ2w8RZrgXXJwHXXe2Qg8LCnUoDTr3tnBnu2BC',
-            symbol: 'acv'
+            symbol: 'PANX',
+            name: 'PANX'
           }
         };
         const key = 'add-token';
