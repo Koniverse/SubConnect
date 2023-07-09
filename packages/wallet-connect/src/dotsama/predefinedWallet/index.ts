@@ -11,6 +11,8 @@ import PolkadotJsLogo from './PolkadotLogo.svg';
 import SubWalletLogo from './SubWalletLogo.svg';
 // @ts-ignore
 import TalismanLogo from './TalismanLogo.svg';
+// @ts-ignore
+import NovaWalletLogo from './NovaWalletLogo.svg';
 
 export const PREDEFINED_WALLETS: WalletInfo[] = [
   {
@@ -47,6 +49,15 @@ export const PREDEFINED_WALLETS: WalletInfo[] = [
     logo: {
       src: FearlessWalletLogo as string,
       alt: 'Fearless Wallet Extension'
+    }
+  },
+  {
+    extensionName: 'polkadot-js',
+    title: 'Nova Wallet',
+    installUrl: 'https://novawallet.io',
+    logo: {
+      src: NovaWalletLogo as string,
+      alt: 'Nova Wallet'
     }
   }
 ];
