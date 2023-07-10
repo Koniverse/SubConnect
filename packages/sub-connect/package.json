@@ -12,7 +12,7 @@
   },
   "sideEffects": false,
   "type": "commonjs",
-  "version": "0.2.3",
+  "version": "0.2.5",
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@ethersproject/keccak256": "^5.6.1",

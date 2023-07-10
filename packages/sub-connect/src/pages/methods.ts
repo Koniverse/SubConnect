@@ -125,6 +125,46 @@ export const METHOD_MAP: Record<string, RequestArguments> = {
       }
     ]
   },
+  addMumbaiNetwork: {
+    method: 'wallet_addEthereumChain',
+    params: [
+      {
+        chainId: '0x13881',
+        rpcUrls: ['https://endpoints.omniatech.io/v1/matic/mumbai/public'],
+        chainName: 'Mumbai',
+        nativeCurrency: { name: 'MATIC', decimals: 18, symbol: 'MATIC' },
+        blockExplorerUrls: ['https://mumbai.polygonscan.com']
+      }
+    ]
+  },
+  switchToMumbaiNetwork: {
+    method: 'wallet_switchEthereumChain',
+    params: [
+      {
+        chainId: '0x13881' // 81
+      }
+    ]
+  },
+  addBobaTestnet: {
+    method: 'wallet_addEthereumChain',
+    params: [
+      {
+        chainId: '0x511',
+        rpcUrls: ['https://endpoints.omniatech.io/v1/matic/mumbai/public'],
+        chainName: 'Boba Testnet',
+        nativeCurrency: { name: 'BOBA', decimals: 18, symbol: 'BOBA' },
+        blockExplorerUrls: ['https://mumbai.polygonscan.com']
+      }
+    ]
+  },
+  switchToBobaTestnet: {
+    method: 'wallet_switchEthereumChain',
+    params: [
+      {
+        chainId: '0x511' // 81
+      }
+    ]
+  },
   getPermissions: {
     method: 'wallet_getPermissions',
     params: [{ eth_accounts: {} }]

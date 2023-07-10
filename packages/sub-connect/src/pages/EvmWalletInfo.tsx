@@ -505,6 +505,14 @@ function EvmWalletInfo (): React.ReactElement {
             {generateRequestButton('Add Shibuya Network', METHOD_MAP.addShibuyaNetwork, undefined, chainId === 81)}
             {generateRequestButton('Switch to Shibuya', METHOD_MAP.switchToShibuyaNetwork, undefined, chainId === 81)}
           </div>
+          <div className='evm-wallet-info__button_row'>
+            {generateRequestButton('Add Mumbai Network', METHOD_MAP.addMumbaiNetwork, undefined, chainId === 80001)}
+            {generateRequestButton('Switch to Mumbai', METHOD_MAP.switchToMumbaiNetwork, undefined, chainId === 80001)}
+          </div>
+          <div className='evm-wallet-info__button_row'>
+            {generateRequestButton('Add Boba Testnet', METHOD_MAP.addBobaTestnet, undefined, chainId === 1297)}
+            {generateRequestButton('Switch to Boba Testnet', METHOD_MAP.switchToBobaTestnet, undefined, chainId === 1297)}
+          </div>
         </div>
       </div>
       <div className='evm-wallet-info-page__section'>
