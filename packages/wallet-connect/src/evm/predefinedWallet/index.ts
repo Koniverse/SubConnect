@@ -7,6 +7,8 @@ import { EvmWalletInfo } from '@subwallet/wallet-connect/types';
 import MetaMaskLogo from './MetaMaskLogo.svg';
 // @ts-ignore
 import SubWalletLogo from './SubWalletLogo.svg';
+// @ts-ignore
+import NovaWalletLogo from './NovaWalletLogo.svg';
 
 export const PREDEFINED_EVM_WALLETS: EvmWalletInfo[] = [
   {
@@ -29,6 +31,17 @@ export const PREDEFINED_EVM_WALLETS: EvmWalletInfo[] = [
       alt: 'MetaMask Extension'
     },
     isSetGlobalString: 'isMetaMask',
+    initEvent: 'ethereum#initialized'
+  },
+  {
+    extensionName: 'ethereum',
+    title: 'Nova Wallet (EVM)',
+    installUrl: 'https://novawallet.io',
+    logo: {
+      src: NovaWalletLogo as string,
+      alt: 'NovaWallet (EVM)'
+    },
+    isSetGlobalString: 'isNovaWallet',
     initEvent: 'ethereum#initialized'
   }
 ];
