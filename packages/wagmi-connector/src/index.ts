@@ -1,8 +1,7 @@
 // Copyright 2017-2022 @subwallet/wagmi-connector authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Chain, ConnectorNotFoundError, InjectedConnector, InjectedConnectorOptions, WindowProvider } from '@wagmi/core';
-import { getAddress, ResourceUnavailableRpcError, RpcError, UserRejectedRequestError } from 'viem';
+import { Chain, InjectedConnector, InjectedConnectorOptions, WindowProvider } from '@wagmi/core';
 
 export type WagmiSubConnectOptions = InjectedConnectorOptions
 
@@ -24,88 +23,6 @@ export class SubWalletConnector extends InjectedConnector {
         ..._options
       }
     });
-  }
-
-  override async connect ({ chainId }: { chainId?: number } = {}) {
-    try {
-      const provider = await this.getProvider();
-
-      if (!provider) {
-        throw new ConnectorNotFoundError();
-      }
-
-      if (provider.on) {
-        provider.on('accountsChanged', this.onAccountsChanged);
-        provider.on('chainChanged', this.onChainChanged);
-        provider.on('disconnect', this.onDisconnect);
-      }
-
-      this.emit('message', { type: 'connecting' });
-
-      const account = await this.getAccount();
-      // Switch to chain if provided
-      let id = await this.getChainId();
-      let unsupported = this.isChainUnsupported(id);
-
-      if (chainId && id !== chainId) {
-        const chain = await this.switchChain(chainId);
-
-        id = chain.id;
-        unsupported = this.isChainUnsupported(id);
-      }
-
-      // Add shim to storage signalling wallet is connected
-      if (this.options.shimDisconnect) {
-        this.storage?.setItem(this.shimDisconnectKey, true);
-      }
-
-      return { account, chain: { id, unsupported }, provider };
-    } catch (e) {
-      if (this.isUserRejectedRequestError(e)) {
-        throw new UserRejectedRequestError(e as Error);
-      }
-
-      if ((<RpcError>e).code === -32002) {
-        throw new ResourceUnavailableRpcError(e as Error);
-      }
-
-      throw e;
-    }
-  }
-
-  override async getAccount (): Promise<`0x${string}`> {
-    const provider = await this.getProvider();
-
-    if (!provider) {
-      throw new ConnectorNotFoundError();
-    }
-
-    let account: `0x${string}` | undefined;
-
-    try {
-      account = await provider.request({ method: 'eth_accounts' })
-        .then((result) => getAddress(result[0]));
-    } catch {
-      console.warn('eth_accounts was unsuccessful, falling back to enable');
-    }
-
-    if (!account) {
-      try {
-        account = await provider.request({ method: 'eth_requestAccounts' })
-          .then((result) => getAddress(result[0]));
-      } catch {
-        console.warn('enable was unsuccessful, falling back to eth_accounts v2');
-      }
-    } else {
-      // enable wallet
-      provider.request({ method: 'eth_requestAccounts' }).catch(console.error);
-    }
-
-    if (!account) {
-      throw new UserRejectedRequestError(new Error('Fail to get accounts list'));
-    }
-
-    return account;
   }
 
   override async getProvider (): Promise<WindowProvider | undefined> {
