@@ -70,7 +70,12 @@ export class BaseDotSamaWallet implements Wallet {
 
     try {
       const injectedExtension = this.rawExtension;
-      const rawExtension = await injectedExtension?.enable(DAPP_NAME);
+
+      if (!injectedExtension || !injectedExtension.enable) {
+        return;
+      }
+
+      const rawExtension = await injectedExtension.enable(DAPP_NAME);
 
       if (!rawExtension) {
         return;
@@ -80,11 +85,11 @@ export class BaseDotSamaWallet implements Wallet {
         ...rawExtension,
         // Manually add `InjectedExtensionInfo` so as to have a consistent response.
         name: this.extensionName,
-        version: injectedExtension.version
+        version: injectedExtension.version || 'unknown'
       };
 
       this._extension = extension;
-      this._signer = extension?.signer as Signer;
+      this._signer = extension?.signer;
       this._metadata = extension?.metadata;
       this._provider = extension?.provider;
     } catch (err) {

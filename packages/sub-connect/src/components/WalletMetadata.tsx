@@ -40,7 +40,7 @@ function WalletMetadata (): React.ReactElement {
       const metadata = walletContext.wallet?.metadata;
 
       if (metadata) {
-        const newMetaDef = {
+        const newMetaDef: MetadataDef = {
           chain: 'SubWallet Connect Demo',
           genesisHash: '0x1bf2a278799868de66ea8610f2ce7c8c43706561b6476031315f6640fe38e888',
           icon: 'substrate',
@@ -49,8 +49,9 @@ function WalletMetadata (): React.ReactElement {
           color: '#F0F0F0',
           specVersion: Math.floor(Date.now() / 1000),
           tokenDecimals: 12,
-          tokenSymbol: 'SWCC'
-        } as MetadataDef;
+          tokenSymbol: 'SWCC',
+          types: {}
+        };
         const key = 'add-metadata';
 
         message.loading({ content: 'Adding Metadata', key });

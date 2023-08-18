@@ -10,7 +10,7 @@
     "url": "https://github.com/Koniverse/SubConnect.git"
   },
   "sideEffects": false,
-  "version": "0.2.4",
+  "version": "0.2.6",
   "workspaces": [
     "packages/*"
   ],
@@ -38,9 +38,9 @@
   },
   "resolutions": {
     "@babel/runtime": "^7.16.7",
-    "@polkadot/api": "*",
-    "@polkadot/types": "*",
-    "@polkadot/util": "*",
+    "@polkadot/api": "^10.9.1",
+    "@polkadot/types": "^10.9.1",
+    "@polkadot/util": "^10.1.2",
     "@types/node": "^16.7.13",
     "typescript": "^4.6.4"
   }
