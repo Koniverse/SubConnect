@@ -25,3 +25,10 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
+.wallet-action-button-group {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+}

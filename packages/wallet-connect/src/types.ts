@@ -40,6 +40,22 @@ export interface WalletMethods {
   getAccounts: () => Promise<WalletAccount[] | null>
 }
 
+export interface RequestAddPspToken {
+  genesisHash: string;
+  tokenInfo: {
+    type: string;
+    address: string;
+    symbol: string;
+    name: string;
+    decimals?: number;
+    logo?: string;
+  };
+}
+
+export interface SubWalletInjectedMetadata extends InjectedMetadata {
+  addToken: (request: RequestAddPspToken) => Promise<boolean>;
+}
+
 export interface Wallet extends WalletInfo, WalletMethods {
   installed: boolean | undefined;
 
@@ -47,7 +63,7 @@ export interface Wallet extends WalletInfo, WalletMethods {
 
   signer: Signer | undefined;
 
-  metadata: InjectedMetadata | undefined;
+  metadata: SubWalletInjectedMetadata | undefined;
 
   provider: InjectedProvider | undefined;
 }
