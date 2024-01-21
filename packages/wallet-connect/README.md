@@ -135,7 +135,7 @@ Basic functions of wallets (BaseDotsamaWallet):
 - `wallet.enable(): Promise<void>`: Enable wallet with your url by authentication popup in the first time and any time before use another wallet functions.
 - `wallet.getAccounts(): WalletAccount[]`: Get all account of the wallet.
 - `wallet.subscribeAccounts(callback): UnsubscribeFn`: Get and subscribe account changes. This will return self unsubscribe function.
-- `wallet.extention`: Return `InjectExtension` object that is provided wallet extension. You can found all extension interface in package `@polkadot/extension-inject`. We also make quick access of extension with these props:
+- `wallet.extension`: Return `InjectExtension` object that is provided wallet extension. You can found all extension interface in package `@polkadot/extension-inject`. We also make quick access of extension with these props:
   - `wallet.signer`: Quick access of `wallet.extension.signer`
   - `wallet.metadata`: Quick access of `wallet.extension.metadata`
   - `wallet.provider`: Quick access of `wallet.extension.provider`
